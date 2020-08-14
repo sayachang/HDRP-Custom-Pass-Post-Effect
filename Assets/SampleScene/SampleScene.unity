@@ -1610,7 +1610,7 @@ MonoBehaviour:
       type: {class: KuwaharaPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 0
+        enabled: 1
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
@@ -1669,7 +1669,7 @@ MonoBehaviour:
       type: {class: RainPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 1
+        enabled: 0
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
