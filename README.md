@@ -35,11 +35,11 @@ Douyatte tukauno?
 
 1. HDRPテンプレートでプロジェクトを作成します  
 HDRP tenpure-to de purojekuto wo sakusei simasu
-2. このリポジトリの内容(Assets以下)をプロジェクトフォルダにコピーします  
+1. このリポジトリの内容(Assets以下)をプロジェクトフォルダにコピーします  
 kono ripojitori no naiyou(Assets ika)wo purojekuto foruda ni kopi- simasu
-3. サンプルシーン(Assets/SampleScene/SampleScene.unity)を開きます  
+1. サンプルシーン(Assets/SampleScene/SampleScene.unity)を開きます  
 sanpuru si-n(Assets/SampleScene/SampleScene.unity)wo hirakimasu
-4. ヒエラルキーのカスタムパスを選択し、エフェクトのチェックボックスをオン/オフします  
+1. ヒエラルキーのカスタムパスを選択し、エフェクトのチェックボックスをオン/オフします  
 hieraruki- no kasutamu pasu wo sentaku si, efekuto no tyekku bokkusu wo on/ohu simasu
 
 ![ヒエラルキー](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/CustomPassGameObject.png "Hierarchy")
