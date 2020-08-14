@@ -47,13 +47,28 @@ hieraruki- no kasutamu pasu wo sentaku si, efekuto no tyekku bokkusu wo on/ohu s
 ## どんなエフェクトがあるの？  
 Donna efekuto ga aruno?
 
+### CRT風  
+CRT fuu
+
 ![CRT](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/CRT.png "CRT")
+
+### 桑原フィルター  
+Kuwahara Firuta-
 
 ![桑原フィルター Kuwahara Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/KuwaharaFilter.png "Kuwahara Filter")
 
+### アウトライン  
+Auto Rain
+
 ![アウトライン Auto rain](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/Outline.png "Outline")
 
+### 雨粒  
+Amatsubu
+
 ![雨粒 Amatsubu](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/RainDrops.png "Rain Drops")
+
+### ソーベルフィルター  
+So-beru Firuta-
 
 ![ソーベルフィルター So-beru Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/SobelFilter.png "Sobel Filter")
 
