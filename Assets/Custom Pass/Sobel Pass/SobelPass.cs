@@ -10,23 +10,21 @@ public class SobelPass : CustomPass
     public Color baseColor = Color.white;
     public float threshold = 1;
     public float thickness = 1;
-    public float senga = 0;
-    public float nega = 0;
-    public float lines = 0;
-    [SerializeField, HideInInspector]
-    Shader sobelShader;
+    public bool senga = false;
+    public bool nega = false;
+    public bool lines = false;
 
-    Material fullscreenMaterial;
+    [SerializeField, HideInInspector]
+    Shader shader;
+    Material material;
     MaterialPropertyBlock materialProperties;
     ShaderTagId[] shaderTags;
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        sobelShader = Shader.Find("FullScreen/SobelPass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(sobelShader);
+        shader = Shader.Find("FullScreen/SobelPass");
+        material = CoreUtils.CreateEngineMaterial(shader);
         materialProperties = new MaterialPropertyBlock();
-
-        // List all the materials that will be replaced in the frame
         shaderTags = new ShaderTagId[3]
         {
             new ShaderTagId("Forward"),
@@ -37,7 +35,7 @@ public class SobelPass : CustomPass
         rtBuffer = RTHandles.Alloc(
             Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Sobel Buffer"
+            useDynamicScale: true, name: "RTBuffer"
         );
     }
     void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
@@ -66,14 +64,17 @@ public class SobelPass : CustomPass
         materialProperties.SetTexture("_OutlineBuffer", rtBuffer);
         materialProperties.SetFloat("_Threshold", threshold);
         materialProperties.SetFloat("_Thickness", thickness);
-        materialProperties.SetFloat("_Senga", senga);
-        materialProperties.SetFloat("_Nega", nega);
-        materialProperties.SetFloat("_Lines", lines);
-        CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
+        if (senga)
+            materialProperties.SetFloat("_Senga", 1);
+        if (nega)
+            materialProperties.SetFloat("_Nega", 1);
+        if (lines)
+            materialProperties.SetFloat("_Lines", 1);
+        CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()
     {
-        CoreUtils.Destroy(fullscreenMaterial);
+        CoreUtils.Destroy(material);
         rtBuffer.Release();
     }
 }

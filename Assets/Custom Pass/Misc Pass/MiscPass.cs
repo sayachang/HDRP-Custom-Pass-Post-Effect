@@ -2,11 +2,10 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-public class KuwaharaPass : CustomPass
+public class MiscPass : CustomPass
 {
-    [Range(0, 16)]
-    public int radius = 7;
-    public int radExpand = 1;
+    [Range(1, 512)]
+    public int mosaicBlock = 512;
 
     [SerializeField, HideInInspector]
     Shader shader;
@@ -16,7 +15,7 @@ public class KuwaharaPass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        shader = Shader.Find("FullScreen/KuwaharaPass");
+        shader = Shader.Find("FullScreen/MiscPass");
         material = CoreUtils.CreateEngineMaterial(shader);
         materialProperties = new MaterialPropertyBlock();
         shaderTags = new ShaderTagId[3]
@@ -32,7 +31,7 @@ public class KuwaharaPass : CustomPass
             useDynamicScale: true, name: "RTBuffer"
         );
     }
-    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+    void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
         var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
@@ -46,13 +45,12 @@ public class KuwaharaPass : CustomPass
         CoreUtils.SetRenderTarget(cmd, rtBuffer, ClearFlag.Color);
         HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
     }
-    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera camera, CullingResults cullingResult)
     {
-        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
+        DrawMeshes(renderContext, cmd, camera, cullingResult);
         SetCameraRenderTarget(cmd);
 
-        materialProperties.SetInt("_Radius", radius);
-        materialProperties.SetInt("_RadEx", radExpand);
+        materialProperties.SetInt("_MosaicBlock", mosaicBlock);
         CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()

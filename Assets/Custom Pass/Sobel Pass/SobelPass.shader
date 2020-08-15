@@ -1,13 +1,12 @@
 ﻿Shader "FullScreen/SobelPass"
 {
     HLSLINCLUDE
-
     #pragma vertex Vert
-
     #pragma target 4.5
     #pragma only_renderers d3d11 playstation xboxone vulkan metal switch
-
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
+
+    #define SAMPLES 8
     float4 _OutlineColor;
     float4 _BaseColor;
     float _Threshold;
@@ -17,7 +16,6 @@
     float _Lines;
     float _Lumin;
 
-#define SAMPLES 8
     static float2 samples[SAMPLES] =
     {
         float2(1, 1),
@@ -82,18 +80,20 @@
         else {
             sobel = sqrt(pow(sh.r * sh.r, 2) + pow(sv.r * sv.r, 2)) * 128;
         }
+
+        if (_Lines >= 1)
+            color.rgb = lerp(_BaseColor.rgb, color.rgb, sobel);
+
         if (_Nega >= 1)
             color.rgb = lerp(_OutlineColor.rgb, color.rgb, sobel);
-        else if (_Lines >= 1)
-            color.rgb = lerp(_BaseColor.rgb, color.rgb, sobel);
         else
             color.rgb = lerp(color.rgb, _OutlineColor.rgb,  sobel);
         return color;
     }
 
-        ENDHLSL
+    ENDHLSL
 
-        SubShader
+    SubShader
     {
         Pass
         {
