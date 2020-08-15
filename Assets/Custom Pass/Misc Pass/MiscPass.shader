@@ -7,6 +7,19 @@
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
 
     int _MosaicBlock;
+    int _Concentrated;
+
+    float concentrated(float2 p)
+    {
+        float2 uv = 2. * p - 1.;
+        float r = length(uv);
+        r = 0.7 * r - 0.7;
+        float a = atan2(uv.y, uv.x);
+        a = abs(cos(50. * a) + sin(20. * a));
+        float d = a - r;
+        float n = smoothstep(0.1, 0.4, saturate(d));
+        return n;
+    }
 
     float4 FullScreenPass(Varyings varyings) : SV_Target
     {
@@ -22,10 +35,15 @@
 
         // Mosaic
         float mosaicFactor = float(_MosaicBlock);
-        uv = floor(uv * mosaicFactor) / mosaicFactor;
-        float3 col = CustomPassSampleCameraColor(uv, 0);
+        float2 mosaicUV = floor(uv * mosaicFactor) / mosaicFactor;
+        float3 mosaicCol = CustomPassSampleCameraColor(mosaicUV, 0);
 
-        color.rgb = col;
+        // Concentrated
+        float concentratedCol = concentrated(uv);
+
+        color.rgb = mosaicCol;
+        if (_Concentrated > 0)
+            color.rgb *= concentratedCol;
         return color;
     }
 
