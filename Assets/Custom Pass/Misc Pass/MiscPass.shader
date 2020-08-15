@@ -8,6 +8,8 @@
 
     int _MosaicBlock;
     int _Concentrated;
+    int _Nega;
+    float _NegaIntensity;
 
     float concentrated(float2 p)
     {
@@ -37,13 +39,18 @@
         float mosaicFactor = float(_MosaicBlock);
         float2 mosaicUV = floor(uv * mosaicFactor) / mosaicFactor;
         float3 mosaicCol = CustomPassSampleCameraColor(mosaicUV, 0);
+        color.rgb = mosaicCol;
+
+        // Nega
+        if (_Nega > 0)
+            color.rgb = _NegaIntensity - color.rgb;
 
         // Concentrated
-        float concentratedCol = concentrated(uv);
-
-        color.rgb = mosaicCol;
-        if (_Concentrated > 0)
+        if (_Concentrated > 0) {
+            float concentratedCol = concentrated(uv);
             color.rgb *= concentratedCol;
+        }
+
         return color;
     }
 

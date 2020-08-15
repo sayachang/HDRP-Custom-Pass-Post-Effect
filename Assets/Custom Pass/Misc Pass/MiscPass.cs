@@ -6,7 +6,10 @@ public class MiscPass : CustomPass
 {
     [Range(1, 512)]
     public int mosaicBlock = 512;
+    public bool nega = false;
     public bool concentrated = false;
+    [Range(0.1f, 3)]
+    public float negaIntensity = 1;
 
     [SerializeField, HideInInspector]
     Shader shader;
@@ -52,9 +55,13 @@ public class MiscPass : CustomPass
         SetCameraRenderTarget(cmd);
 
         materialProperties.SetInt("_MosaicBlock", mosaicBlock);
-        if(concentrated)
+        if (concentrated)
             materialProperties.SetInt("_Concentrated", 1);
-        CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
+        if (nega)
+            materialProperties.SetInt("_Nega", 1);
+        materialProperties.SetFloat("_NegaIntensity", negaIntensity);
+
+    CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()
     {
