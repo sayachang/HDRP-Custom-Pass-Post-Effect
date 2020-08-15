@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2035111234}
-  m_IndirectSpecularColor: {r: 131.15134, g: 162.54797, b: 215.19327, a: 1}
+  m_IndirectSpecularColor: {r: 131.18076, g: 162.51416, b: 215.03311, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -165,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168218571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8100615}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8100843}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -1603,6 +1603,7 @@ MonoBehaviour:
   - id: 2
   - id: 3
   - id: 4
+  - id: 5
   injectionPoint: 2
   references:
     version: 1
@@ -1610,15 +1611,15 @@ MonoBehaviour:
       type: {class: KuwaharaPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 1
+        enabled: 0
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        radius: 6
+        radius: 7
         radExpand: 2
-        kuwaharaShader: {fileID: 4800000, guid: 48ac85b50b5f8d04f9a23bb04dbe4198, type: 3}
+        shader: {fileID: 4800000, guid: 48ac85b50b5f8d04f9a23bb04dbe4198, type: 3}
     00000001:
       type: {class: CRTPass, ns: , asm: Assembly-CSharp}
       data:
@@ -1651,7 +1652,7 @@ MonoBehaviour:
       type: {class: SobelPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 0
+        enabled: 1
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
@@ -1659,12 +1660,12 @@ MonoBehaviour:
         m_Version: 0
         outlineColor: {r: 0.62228554, g: 0.66132283, b: 0.754717, a: 1}
         baseColor: {r: 0.35929155, g: 0.37490296, b: 0.5188679, a: 0}
-        threshold: 0.6
-        thickness: 0.12
-        senga: 1.33
-        nega: 0.65
-        lines: 1.05
-        sobelShader: {fileID: 4800000, guid: 2a102bfdde421b4428f6b3ad970c6c04, type: 3}
+        threshold: 14.35
+        thickness: 0.14
+        senga: 1
+        nega: 1
+        lines: 1
+        shader: {fileID: 4800000, guid: 2a102bfdde421b4428f6b3ad970c6c04, type: 3}
     00000004:
       type: {class: RainPass, ns: , asm: Assembly-CSharp}
       data:
@@ -1679,6 +1680,21 @@ MonoBehaviour:
         zoom: 1
         speed: 0.25
         rainShader: {fileID: 4800000, guid: cf2a98190753b4741b5e137c50c510fe, type: 3}
+    00000005:
+      type: {class: MiscPass, ns: , asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        mosaicBlock: 512
+        nega: 0
+        concentrated: 0
+        negaIntensity: 1.49
+        shader: {fileID: 4800000, guid: 71d9c0c7d75e196428edd8b67949650d, type: 3}
 --- !u!4 &914834605
 Transform:
   m_ObjectHideFlags: 0
@@ -1721,7 +1737,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037846703}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.68701494}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.68702066}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -2894,7 +2910,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059789766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5100613, y: 1.196, z: 1.1760308}
+  m_LocalPosition: {x: 2.5100842, y: 1.196, z: 1.1760422}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}

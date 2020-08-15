@@ -23,6 +23,8 @@
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
             color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
 
+        _Radius = clamp(_Radius, 0., 17.);
+
         float2 uv = posInput.positionNDC.xy;
 
         float3 mean[4] = {
