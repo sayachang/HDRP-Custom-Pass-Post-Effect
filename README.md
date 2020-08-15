@@ -28,7 +28,7 @@ Dounaruno?
 画像で見ていただくのが早いでしょう。選んだエフェクトを画面全体にかけることができます。  
 Gazou de mite itadakunoga hayai desyou. Eranda efekuto wo gamenzentai ni kakeru kotoga dekimasu.
 
-![ポストエフェクト posutoefekuto](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/CustomPassImage.png "posteffect")
+![ポストエフェクト posutoefekuto](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/CustomPassImage.png "posteffect")
 
 ## どうやって使うの？  
 Douyatte tukauno?
@@ -42,7 +42,7 @@ sanpuru si-n(Assets/SampleScene/SampleScene.unity)wo hirakimasu
 1. ヒエラルキーのカスタムパスを選択し、エフェクトのチェックボックスをオン/オフします  
 hieraruki- no kasutamu pasu wo sentaku si, efekuto no tyekku bokkusu wo on/ohu simasu
 
-![ヒエラルキー](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/CustomPassGameObject.png "Hierarchy")
+![ヒエラルキー](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/CustomPassGameObject.png "Hierarchy")
 
 ## どんなエフェクトがあるの？  
 Donna efekuto ga aruno?
@@ -50,27 +50,27 @@ Donna efekuto ga aruno?
 ### CRT風  
 CRT fuu
 
-![CRT](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/CRT.png "CRT")
+![CRT](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/CRT.png "CRT")
 
 ### 桑原フィルター  
 Kuwahara Firuta-
 
-![桑原フィルター Kuwahara Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/KuwaharaFilter.png "Kuwahara Filter")
+![桑原フィルター Kuwahara Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/KuwaharaFilter.png "Kuwahara Filter")
 
 ### アウトライン  
 Auto Rain
 
-![アウトライン Auto rain](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/Outline.png "Outline")
+![アウトライン Auto rain](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Outline.png "Outline")
 
 ### 雨粒  
 Amatsubu
 
-![雨粒 Amatsubu](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/RainDrops.png "Rain Drops")
+![雨粒 Amatsubu](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/RainDrops.png "Rain Drops")
 
 ### ソーベルフィルター  
 So-beru Firuta-
 
-![ソーベルフィルター So-beru Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Assets/Images/SobelFilter.png "Sobel Filter")
+![ソーベルフィルター So-beru Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/SobelFilter.png "Sobel Filter")
 
 ## リファレンス  
 Rifarensu
