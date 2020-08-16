@@ -8,13 +8,12 @@
 
     #define SAMPLES 8
     float4 _OutlineColor;
-    float4 _BaseColor;
+    float _SobelPower;
     float _Threshold;
     float _Thickness;
-    float _Senga;
-    float _Nega;
-    float _Lines;
-    float _Lumin;
+    float _UseBaseColor;
+    float4 _BaseColor;
+    float _Luminous;
 
     static float2 samples[SAMPLES] =
     {
@@ -51,12 +50,11 @@
         PositionInputs posInput = GetPositionInput(varyings.positionCS.xy, _ScreenSize.zw, depth, UNITY_MATRIX_I_VP, UNITY_MATRIX_V);
         float4 color = float4(0.0, 0.0, 0.0, 0.0);
 
-        // Load the camera color buffer at the mip 0 if we're not at the before rendering injection point
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
             color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
 
-        // When sampling RTHandle texture, always use _RTHandleScale.xy to scale your UVs first.
         float2 uv = posInput.positionNDC.xy;
+        color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
 
         float sobel = 0;
         float4 sh = 0, sv = 0;
@@ -64,30 +62,18 @@
         {
             float2 uvN = uv + _ScreenSize.zw * samples[i] * _Thickness;
             float4 neighbour = SamplePix(uvN);
-            if (_Senga < 1) {
-                sh += min(max(neighbour, 0), 0) * samplec[i].x;
-                sv += min(max(neighbour, 0), 0) * samplec[i].y;
-            }
-            else {
                 sh += neighbour * samplec[i].x;
                 sv += neighbour * samplec[i].y;
-            }
         }
 
-        if (_Senga < 1) {
-            sobel = sqrt(sh.r * sh.r + sv.r * sv.r);
-        }
-        else {
-            sobel = sqrt(pow(sh.r * sh.r, 2) + pow(sv.r * sv.r, 2)) * 128;
+        if (_Luminous < 1) {
+            return float4(sqrt(pow(sh * sh, 2) + pow(sv * sv, 2)).rgb, 1);
         }
 
-        if (_Lines >= 1)
-            color.rgb = lerp(_BaseColor.rgb, color.rgb, sobel);
+        sobel = sqrt(pow(sh.r * sh.r, 2) + pow(sv.r * sv.r, 2)) * _SobelPower;
+        sobel *= step(_Threshold, sobel);
+        color.rgb = lerp(_BaseColor.rgb, color.rgb, sobel);
 
-        if (_Nega >= 1)
-            color.rgb = lerp(_OutlineColor.rgb, color.rgb, sobel);
-        else
-            color.rgb = lerp(color.rgb, _OutlineColor.rgb,  sobel);
         return color;
     }
 

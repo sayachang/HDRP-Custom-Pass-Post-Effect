@@ -4,15 +4,13 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 public class SobelPass : CustomPass
 {
-    [ColorUsage(false, true)]
-    public Color outlineColor = Color.black;
+    public float thickness = 1;
+    public bool luminous = false;
+    [Range(1, 1024)]
+    public float luminousPower = 1;
+    public float threshold = 1;
     [ColorUsage(false, true)]
     public Color baseColor = Color.white;
-    public float threshold = 1;
-    public float thickness = 1;
-    public bool senga = false;
-    public bool nega = false;
-    public bool lines = false;
 
     [SerializeField, HideInInspector]
     Shader shader;
@@ -42,7 +40,6 @@ public class SobelPass : CustomPass
     {
         var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
-            // We need the lighting render configuration to support rendering lit objects
             rendererConfiguration = PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.Lightmaps,
             renderQueueRange = RenderQueueRange.all,
             sortingCriteria = SortingCriteria.BackToFront,
@@ -59,17 +56,13 @@ public class SobelPass : CustomPass
 
         SetCameraRenderTarget(cmd);
 
-        materialProperties.SetColor("_OutlineColor", outlineColor);
-        materialProperties.SetColor("_BaseColor", baseColor);
         materialProperties.SetTexture("_OutlineBuffer", rtBuffer);
-        materialProperties.SetFloat("_Threshold", threshold);
+        materialProperties.SetColor("_BaseColor", baseColor);
         materialProperties.SetFloat("_Thickness", thickness);
-        if (senga)
-            materialProperties.SetFloat("_Senga", 1);
-        if (nega)
-            materialProperties.SetFloat("_Nega", 1);
-        if (lines)
-            materialProperties.SetFloat("_Lines", 1);
+        materialProperties.SetFloat("_Threshold", threshold);
+        materialProperties.SetFloat("_SobelPower", luminousPower);
+        if (luminous)
+            materialProperties.SetFloat("_Luminous", 1);
         CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()
