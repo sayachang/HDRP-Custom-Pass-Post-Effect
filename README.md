@@ -72,6 +72,21 @@ So-beru Firuta-
 
 ![ソーベルフィルター So-beru Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/SobelFilter.png "Sobel Filter")
 
+### モザイク  
+Mozaiku
+
+![モザイク Mozaiku](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Mosaic.png "Mosaic")
+
+### 集中線  
+Syuuchuusen
+
+![集中線 Syuuchuusen](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Concentrated.png "Concentrated")
+
+### ネガポジ変換  
+Negathibu
+
+![ネガポジ変換 Negathibu](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Nega.png "Nega")
+
 ## リファレンス  
 Rifarensu
 
