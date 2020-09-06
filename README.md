@@ -47,6 +47,16 @@ hieraruki- no kasutamu pasu wo sentaku si, efekuto no tyekku bokkusu wo on/ohu s
 ## どんなエフェクトがあるの？  
 Donna efekuto ga aruno?
 
+### ハーフトーン  
+Ha-fu to-n
+
+![ハーフトーン Ha-fu to-n](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Halftone.png "Halftone")
+
+### グレースケール  
+Gure- Suke-ru
+
+![グレースケール Gure- Suke-ru](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Grayscale.png "Grayscale")
+
 ### CRT風  
 CRT fuu
 
