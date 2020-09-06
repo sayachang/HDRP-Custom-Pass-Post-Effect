@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2035111234}
-  m_IndirectSpecularColor: {r: 131.18076, g: 162.51416, b: 215.03311, a: 1}
+  m_IndirectSpecularColor: {r: 131.15134, g: 162.54797, b: 215.19327, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -165,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168218571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8100991}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8100996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -1604,6 +1604,7 @@ MonoBehaviour:
   - id: 3
   - id: 4
   - id: 5
+  - id: 6
   injectionPoint: 2
   references:
     version: 1
@@ -1652,7 +1653,7 @@ MonoBehaviour:
       type: {class: SobelPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 1
+        enabled: 0
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
@@ -1693,6 +1694,21 @@ MonoBehaviour:
         concentrated: 0
         negaIntensity: 1.49
         shader: {fileID: 4800000, guid: 71d9c0c7d75e196428edd8b67949650d, type: 3}
+    00000006:
+      type: {class: GrayscalePass, ns: , asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 1
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        centre: {x: 0.36, y: 0.39}
+        rad: 0.608
+        overrideColor: 1
+        color: {r: 0.67058825, g: 0.3137255, b: 0.5117747, a: 1}
+        shader: {fileID: 4800000, guid: 78182ae493558a64ba0df313419f7db8, type: 3}
 --- !u!4 &914834605
 Transform:
   m_ObjectHideFlags: 0
@@ -1735,7 +1751,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037846703}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.68702435}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870245}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -2325,7 +2341,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   volumeAnchorOverride: {fileID: 0}
-  antialiasing: 2
+  antialiasing: 1
   SMAAQuality: 2
   dithering: 1
   stopNaNs: 0
@@ -2908,7 +2924,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059789766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.510099, y: 1.196, z: 1.1760496}
+  m_LocalPosition: {x: 2.5100994, y: 1.196, z: 1.1760498}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
