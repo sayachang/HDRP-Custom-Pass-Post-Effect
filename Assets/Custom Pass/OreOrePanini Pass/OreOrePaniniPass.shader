@@ -6,19 +6,24 @@
     #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
 
+    float _Panini;
     float _D;
-    float2 oreorePanini(float2 uv, float d)
+    float2 panini(float2 uv, float d)
     {
-        float k = uv.x * uv.x / ((d + 1) * (d + 1));
-        float dscr = k * k * d * d - (k + 1) * (k * d * d - 1);
-        float clon = (-k * d + sqrt(dscr)) / (k + 1);
-        float S = (d + 1) / (d + clon);
-        float lon = atan2(uv.x, S * clon);
-        float lat = atan2(uv.y, S);
+        float x = 2.0 * uv.x - 1.0;
+        float y = 2.0 * uv.y - 1.0;
+        float D = 1.0 + d;
+        float sq = x * x + D * D;
+        float xd = x * d;
+        float sec = sq - xd * xd;
 
-        float clat = cos(lat);
-        return float2(sin(lon) * clat, sin(lat));
-        //cos(lon) * clat;
+        float cyld = (-xd * x + D * sqrt(sec)) / sq;
+        float cyldd = cyld + d;
+
+        return float2(x,y) * (cyldd / D) / (cyldd - d) *.5+.5;
+
+        return float2(x,y);
+        
     }
 
     float4 FullScreenPass(Varyings varyings) : SV_Target
@@ -32,8 +37,10 @@
             color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
 
         float2 uv = posInput.positionNDC.xy;
-        float2 nuv = oreorePanini(uv, _D);
-        color.rgb = CustomPassSampleCameraColor(nuv, 0);
+        float2 nuv = panini(uv, _D);
+
+        nuv.xy = lerp(uv, nuv.xy, _Panini);
+        color.rgb = CustomPassSampleCameraColor(nuv.xy, 0);
 
         return color;
     }

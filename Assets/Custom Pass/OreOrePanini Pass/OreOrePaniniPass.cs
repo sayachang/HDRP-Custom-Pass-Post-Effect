@@ -4,6 +4,8 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 public class OreOrePaniniPass : CustomPass
 {
+    [Range(0, 1)]
+    public float panini = 0.5f;
     [Range(0.01f, 100)]
     public float d = 1;
 
@@ -50,6 +52,7 @@ public class OreOrePaniniPass : CustomPass
         DrawMeshes(renderContext, cmd, camera, cullingResult);
         SetCameraRenderTarget(cmd);
 
+        materialProperties.SetFloat("_Panini", panini);
         materialProperties.SetFloat("_D", d);
 
     CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
