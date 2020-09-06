@@ -12,6 +12,7 @@
     float _RadM;
     float _RadA;
     float4 _ToneColor;
+    float _AddOrg;
     float mod(float x, float y) { return x - floor(x / y) * y; }
     float3 mod289(float3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     float2 mod289(float2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -97,15 +98,21 @@
 
         float depth = LoadCameraDepth(varyings.positionCS.xy);
         PositionInputs posInput = GetPositionInput(varyings.positionCS.xy, _ScreenSize.zw, depth, UNITY_MATRIX_I_VP, UNITY_MATRIX_V);
+        float4 org = float4(0.0, 0.0, 0.0, 0.0);
         float4 color = float4(0.0, 0.0, 0.0, 0.0);
 
         // Load the camera color buffer at the mip 0 if we're not at the before rendering injection point
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
             color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
+        org = color;
 
         // When sampling RTHandle texture, always use _RTHandleScale.xy to scale your UVs first.
         float2 uv = posInput.positionNDC.xy * _RTHandleScale.xy;
         color.rgb = halftone(color.rgb, uv, _Freq);
+
+        if (_AddOrg > 0)
+            color.rgb = .5 * (color.rgb + org.rgb);
+
         return color;
     }
 

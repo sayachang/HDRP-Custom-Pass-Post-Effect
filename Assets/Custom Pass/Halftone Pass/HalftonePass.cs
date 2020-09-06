@@ -9,6 +9,7 @@ public class HalftonePass : CustomPass
     public float radA = 0;
     [ColorUsage(false, true)]
     public Color toneColor = Color.white;
+    public bool addOriginal = false;
     [SerializeField, HideInInspector]
     Shader halftoneShader;
 
@@ -61,6 +62,8 @@ public class HalftonePass : CustomPass
         materialProperties.SetFloat("_RadM", radM);
         materialProperties.SetFloat("_RadA", radA);
         materialProperties.SetColor("_ToneColor", toneColor);
+        if(addOriginal)
+            materialProperties.SetFloat("_AddOrg", 1);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()

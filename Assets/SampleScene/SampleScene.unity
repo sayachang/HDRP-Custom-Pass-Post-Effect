@@ -1605,6 +1605,7 @@ MonoBehaviour:
   - id: 4
   - id: 5
   - id: 6
+  - id: 7
   injectionPoint: 2
   references:
     version: 1
@@ -1698,7 +1699,7 @@ MonoBehaviour:
       type: {class: GrayscalePass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 1
+        enabled: 0
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
@@ -1709,6 +1710,21 @@ MonoBehaviour:
         overrideColor: 1
         color: {r: 0.67058825, g: 0.3137255, b: 0.5117747, a: 1}
         shader: {fileID: 4800000, guid: 78182ae493558a64ba0df313419f7db8, type: 3}
+    00000007:
+      type: {class: HalftonePass, ns: , asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 1
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        freq: 45
+        radM: 1.5
+        radA: 1
+        toneColor: {r: 1, g: 0.6, b: 0.8502392, a: 1}
+        halftoneShader: {fileID: 4800000, guid: 092b39e318e24784ebaa9ce628cd0268, type: 3}
 --- !u!4 &914834605
 Transform:
   m_ObjectHideFlags: 0
