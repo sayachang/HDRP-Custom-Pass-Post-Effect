@@ -2,16 +2,17 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-public class HalftonePass : CustomPass
+public class GrayscalePass : CustomPass
 {
-    public float freq = 1;
-    public float radM = 1;
-    public float radA = 0;
+    [Tooltip("-1.0 to +1.0")]
+    public Vector2 centre = new Vector2(0, 0);
+    [Tooltip("0.0 to +1.0"), Range(0, 1)]
+    public float rad = 1;
+    public bool overrideColor = false;
     [ColorUsage(false, true)]
-    public Color toneColor = Color.white;
-    public bool addOriginal = false;
+    public Color color = Color.white;
     [SerializeField, HideInInspector]
-    Shader halftoneShader;
+    Shader shader;
 
     Material fullscreenMaterial;
     MaterialPropertyBlock materialProperties;
@@ -19,8 +20,8 @@ public class HalftonePass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        halftoneShader = Shader.Find("FullScreen/HalftonePass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(halftoneShader);
+        shader = Shader.Find("FullScreen/GrayscalePass");
+        fullscreenMaterial = CoreUtils.CreateEngineMaterial(shader);
         materialProperties = new MaterialPropertyBlock();
 
         // List all the materials that will be replaced in the frame
@@ -34,7 +35,7 @@ public class HalftonePass : CustomPass
         rtBuffer = RTHandles.Alloc(
             Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Halftone Buffer"
+            useDynamicScale: true, name: "Gray Buffer"
         );
     }
     void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
@@ -58,12 +59,11 @@ public class HalftonePass : CustomPass
 
         SetCameraRenderTarget(cmd);
 
-        materialProperties.SetFloat("_Freq", freq);
-        materialProperties.SetFloat("_RadM", radM);
-        materialProperties.SetFloat("_RadA", radA);
-        materialProperties.SetColor("_ToneColor", toneColor);
-        if(addOriginal)
-            materialProperties.SetFloat("_AddOrg", 1);
+        materialProperties.SetVector("_Centre", centre);
+        materialProperties.SetFloat("_Rad", rad);
+        if (overrideColor)
+            materialProperties.SetFloat("_OverrideCol", 1);
+        materialProperties.SetColor("_Color", color);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()
