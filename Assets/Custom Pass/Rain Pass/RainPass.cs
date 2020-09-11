@@ -4,8 +4,13 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 public class RainPass : CustomPass
 {
+    [Range(0, 1)]
     public float rainAmount = 0.5f;
+    [Range(0, 1)]
+    public float density = 0.5f;
+    [Range(0, 3)]
     public float zoom = 1.0f;
+    [Range(0, 10)]
     public float speed = 0.25f;
     [SerializeField, HideInInspector]
     Shader rainShader;
@@ -57,6 +62,7 @@ public class RainPass : CustomPass
 
         materialProperties.SetTexture("_BufferTex", rtBuffer);
         materialProperties.SetFloat("_RainAmount", rainAmount);
+        materialProperties.SetFloat("_Density", density);
         materialProperties.SetFloat("_Zoom", zoom);
         materialProperties.SetFloat("_Speed", speed);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);

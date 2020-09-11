@@ -11,6 +11,7 @@
         
     TEXTURE2D_X(_BufferTex);
     float _RainAmount;
+    float _Density;
     float _Zoom;
     float _Speed;
 
@@ -93,24 +94,25 @@
         float d = length(uv - p);
 
         float fade = Saw(.025, frac(t + n.z));
-        float c = S(.3, 0., d) * frac(n.z * 10.) * fade;
+        float c = S(.1, 0., d) * frac(n.z * 10.) * fade;
         return c;
     }
 
-    float2 Drops(float2 uv, float t, float l0, float l1, float l2) {
+    float Drops(float2 uv, float t, float l0, float l1, float l2) {
         float s = StaticDrops(uv, t) * l0;
-        float2 m1 = DropLayer2(uv, t) * l1;
-        float2 m2 = DropLayer2(uv * 1.85, t) * l2;
+        float2 m1 = DropLayer2(uv, t) * l1 * 2.;
+        float2 m2 = DropLayer2(uv * 2.5, t) * l2 * 2.;
 
         float c = s + m1.x + m2.x;
-        c = S(.3, 1., c);
+        c = S(.5, 2., c);
 
-        return float2(c, max(m1.y * l0, m2.y * l1));
+        return c;
     }
 
     float3 rain(float2 i) {
         float time = _Time.y;
         float rainAmount = _RainAmount;
+        float dens = _Density;
         float zoom = _Zoom;
         float speed = _Speed;
         float rainTime = 360.;
@@ -129,15 +131,18 @@
         t *= speed;
 
         // let the rain fall down
-        float staticDrops = S(-.5, 1., rainAmount) * 2.;
-        float layer1 = S(.25, .75, rainAmount);
-        float layer2 = S(.0, .5, rainAmount);
+        float staticDrops = S(0., 1., rainAmount);
+        float layer1 = S(0.375, .5, rainAmount);
+        float layer2 = S(0.25, .3, rainAmount);
+        staticDrops *= dens;
+        layer1 *= dens;
+        layer2 *= dens;
 
-        float2 c = Drops(uv, t, staticDrops, layer1, layer2);
         float2 e = float2(.001, 0.);
-        float cx = Drops(uv + e, t, staticDrops, layer1, layer2).x;
-        float cy = Drops(uv + e.yx, t, staticDrops, layer1, layer2).x;
-        float2 n = float2(cx - c.x, cy - c.x);
+        float c = Drops(uv, t, staticDrops, layer1, layer2);
+        float cx = Drops(uv + e, t, staticDrops, layer1, layer2);
+        float cy = Drops(uv + e.yx, t, staticDrops, layer1, layer2);
+        float2 n = float2(cx - c, cy - c);
 
         // load tex
         float2 texCoord = float2(UV.x + n.x, UV.y + n.y);
