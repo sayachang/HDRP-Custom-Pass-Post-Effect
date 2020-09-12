@@ -11,6 +11,8 @@ HLSLINCLUDE
     float _ChromaMul;
     float _ValueAdd;
     float _ValueMul;
+    float _VibranceAmount;
+    float _Slider;
     float _Border;
 
     float3 rgb2hsv(float3 c)
@@ -32,16 +34,28 @@ HLSLINCLUDE
     }
 
     float3 azayaka(float3 col) {
+        float3 coeff = float3(0.299, 0.587, 0.114);
         float valueAdd = _ValueAdd;
         float valueMul = _ValueMul;
 
-        float lum = dot(col, float3(0.21, 0.72, 0.07));
+        float lum = dot(col, coeff);
         float3 hsv = rgb2hsv(col);
         
         hsv.y = (hsv.y + _ChromaAdd) * _ChromaMul;
         hsv.z += valueMul * (lum - .5 + valueAdd);
 
         return hsv2rgb(hsv);
+    }
+
+    float3 vibrance(float3 col) {
+        float3 coeff = float3(0.299, 0.587, 0.114);
+        float amount = _VibranceAmount;
+
+        float lum = dot(col, coeff);
+        float3 mask = (col - lum.xxx);
+        mask = clamp(mask, 0.0, 1.0);
+        float lumMask = dot(coeff, mask);
+        return lerp(lum.xxx, col, 1.0 + amount * (1.0 - lumMask));
     }
 
     float4 FullScreenPass(Varyings varyings) : SV_Target
@@ -58,6 +72,8 @@ HLSLINCLUDE
 
         float2 uv = posInput.positionNDC.xy;
         float3 col = azayaka(color.rgb);
+        float3 col2 = vibrance(color.rgb);
+        col = lerp(col, col2, _Slider);
         
         col = lerp(color.rgb, col, step(0., uv.x - _Border));
         if (abs(uv.x - _Border) < .005 && _Border > 0 && _Border < 1) col = float3(1., 1., 0.);

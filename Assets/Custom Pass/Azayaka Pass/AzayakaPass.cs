@@ -12,6 +12,10 @@ public class AzayakaPass : CustomPass
     public float valueAdd = 0.33f;
     [Range(0, 2)]
     public float valueMul = 2.0f;
+    [Range(0, 2)]
+    public float vibranceAmount = 1.0f;
+    [Range(0, 1)]
+    public float slider = 0.33f;
     [Range(0, 1)]
     public float border = 0.5f;
     [SerializeField, HideInInspector]
@@ -67,6 +71,8 @@ public class AzayakaPass : CustomPass
         materialProperties.SetFloat("_ChromaMul", chromaMul);
         materialProperties.SetFloat("_ValueAdd", valueAdd);
         materialProperties.SetFloat("_ValueMul", valueMul);
+        materialProperties.SetFloat("_VibranceAmount", vibranceAmount);
+        materialProperties.SetFloat("_Slider", slider);
         materialProperties.SetFloat("_Border", border);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
