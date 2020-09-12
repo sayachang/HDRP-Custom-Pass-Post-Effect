@@ -1,12 +1,9 @@
-﻿Shader "FullScreen/HalftonePass"
+﻿Shader "FullScreen/RGBHalftonePass"
 {
-    HLSLINCLUDE
-
+HLSLINCLUDE
 #pragma vertex Vert
-
 #pragma target 4.5
 #pragma only_renderers d3d11 playstation xboxone vulkan metal switch
-
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
     float _Freq;
     float _RadM;
@@ -110,19 +107,18 @@
         float2 uv = posInput.positionNDC.xy * _RTHandleScale.xy;
         color.rgb = halftone(color.rgb, uv, _Freq);
 
-        if (_AddOrg > 0)
-            color.rgb = .5 * (color.rgb + org.rgb);
+        color.rgb = lerp(color.rgb, org.rgb, _AddOrg);
 
         return color;
     }
 
-        ENDHLSL
+    ENDHLSL
 
-        SubShader
+    SubShader
     {
         Pass
         {
-            Name "Halftone Pass"
+            Name "RGBHalftone Pass"
 
             ZWrite Off
             ZTest Always

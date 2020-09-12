@@ -2,14 +2,15 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-public class HalftonePass : CustomPass
+public class RGBHalftonePass : CustomPass
 {
     public float freq = 1;
     public float radM = 1;
     public float radA = 0;
     [ColorUsage(false, true)]
     public Color toneColor = Color.white;
-    public bool addOriginal = false;
+    [Range(0, 1)]
+    public float addOriginal = 0;
     [SerializeField, HideInInspector]
     Shader halftoneShader;
 
@@ -19,7 +20,7 @@ public class HalftonePass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        halftoneShader = Shader.Find("FullScreen/HalftonePass");
+        halftoneShader = Shader.Find("FullScreen/RGBHalftonePass");
         fullscreenMaterial = CoreUtils.CreateEngineMaterial(halftoneShader);
         materialProperties = new MaterialPropertyBlock();
 
@@ -34,7 +35,7 @@ public class HalftonePass : CustomPass
         rtBuffer = RTHandles.Alloc(
             Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Halftone Buffer"
+            useDynamicScale: true, name: "RGBHalftone Buffer"
         );
     }
     void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
@@ -62,8 +63,7 @@ public class HalftonePass : CustomPass
         materialProperties.SetFloat("_RadM", radM);
         materialProperties.SetFloat("_RadA", radA);
         materialProperties.SetColor("_ToneColor", toneColor);
-        if(addOriginal)
-            materialProperties.SetFloat("_AddOrg", 1);
+        materialProperties.SetFloat("_AddOrg", addOriginal);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()
