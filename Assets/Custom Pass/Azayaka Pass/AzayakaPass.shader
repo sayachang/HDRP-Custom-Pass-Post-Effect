@@ -7,13 +7,22 @@ HLSLINCLUDE
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
 
     TEXTURE2D_X(_BufferTex);
-    float _ChromaAdd;
-    float _ChromaMul;
-    float _ValueAdd;
-    float _ValueMul;
+    float _AzayakaR;
+    float _AzayakaL;
+    float _Value;
     float _VibranceAmount;
-    float _Slider;
+    float _Mixture;
     float _Border;
+    static float3 BT601 = float3(0.298912, 0.586611, 0.114478);
+
+    float bt601Lum(float3 c) {
+        return dot(c, BT601);
+    }
+
+    float remap(float val, float inMin, float inMax, float outMin, float outMax)
+    {
+        return clamp(outMin + (val - inMin) * (outMax - outMin) / (inMax - inMin), outMin, outMax);
+    }
 
     float3 rgb2hsv(float3 c)
     {
@@ -34,27 +43,29 @@ HLSLINCLUDE
     }
 
     float3 azayaka(float3 col) {
-        float3 coeff = float3(0.299, 0.587, 0.114);
-        float valueAdd = _ValueAdd;
-        float valueMul = _ValueMul;
+        float valueMul = _Value;
 
-        float lum = dot(col, coeff);
+        float lum = bt601Lum(col);
         float3 hsv = rgb2hsv(col);
         
-        hsv.y = (hsv.y + _ChromaAdd) * _ChromaMul;
-        hsv.z += valueMul * (lum - .5 + valueAdd);
+        if (hsv.y >= _AzayakaR)
+            hsv.y = remap(hsv.y, _AzayakaR, 1., .5, 1.);
+        else if (hsv.y < _AzayakaL)
+            hsv.y = remap(hsv.y, 0., _AzayakaL, 0., .5);
+        else hsv.y = .5;
+
+        hsv.z *= (1. + valueMul * lum);
 
         return hsv2rgb(hsv);
     }
 
     float3 vibrance(float3 col) {
-        float3 coeff = float3(0.299, 0.587, 0.114);
         float amount = _VibranceAmount;
 
-        float lum = dot(col, coeff);
+        float lum = bt601Lum(col);
         float3 mask = (col - lum.xxx);
         mask = clamp(mask, 0.0, 1.0);
-        float lumMask = dot(coeff, mask);
+        float lumMask = bt601Lum(mask);
         return lerp(lum.xxx, col, 1.0 + amount * (1.0 - lumMask));
     }
 
@@ -73,7 +84,7 @@ HLSLINCLUDE
         float2 uv = posInput.positionNDC.xy;
         float3 col = azayaka(color.rgb);
         float3 col2 = vibrance(color.rgb);
-        col = lerp(col, col2, _Slider);
+        col = lerp(col, col2, _Mixture);
         
         col = lerp(color.rgb, col, step(0., uv.x - _Border));
         if (abs(uv.x - _Border) < .005 && _Border > 0 && _Border < 1) col = float3(1., 1., 0.);

@@ -4,22 +4,20 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 public class AzayakaPass : CustomPass
 {
-    [Range(-0.1f, 0.1f)]
-    public float chromaAdd = 0.05f;
+    [Range(0.0f, 0.5f)]
+    public float azayakaL = 0.5f;
+    [Range(0.5f, 1.0f)]
+    public float azayakaR = 0.5f;
     [Range(0, 2)]
-    public float chromaMul = 1.3f;
-    [Range(0, 1)]
-    public float valueAdd = 0.33f;
-    [Range(0, 2)]
-    public float valueMul = 2.0f;
+    public float value = 2.0f;
     [Range(0, 2)]
     public float vibranceAmount = 1.0f;
     [Range(0, 1)]
-    public float slider = 0.33f;
+    public float mixture = 0.33f;
     [Range(0, 1)]
     public float border = 0.5f;
     [SerializeField, HideInInspector]
-    Shader rainShader;
+    Shader azayakaShader;
 
     Material fullscreenMaterial;
     MaterialPropertyBlock materialProperties;
@@ -27,8 +25,8 @@ public class AzayakaPass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        rainShader = Shader.Find("FullScreen/AzayakaPass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(rainShader);
+        azayakaShader = Shader.Find("FullScreen/AzayakaPass");
+        fullscreenMaterial = CoreUtils.CreateEngineMaterial(azayakaShader);
         materialProperties = new MaterialPropertyBlock();
 
         // List all the materials that will be replaced in the frame
@@ -67,12 +65,11 @@ public class AzayakaPass : CustomPass
         SetCameraRenderTarget(cmd);
 
         materialProperties.SetTexture("_BufferTex", rtBuffer);
-        materialProperties.SetFloat("_ChromaAdd", chromaAdd);
-        materialProperties.SetFloat("_ChromaMul", chromaMul);
-        materialProperties.SetFloat("_ValueAdd", valueAdd);
-        materialProperties.SetFloat("_ValueMul", valueMul);
+        materialProperties.SetFloat("_AzayakaL", azayakaL);
+        materialProperties.SetFloat("_AzayakaR", azayakaR);
+        materialProperties.SetFloat("_Value", value);
         materialProperties.SetFloat("_VibranceAmount", vibranceAmount);
-        materialProperties.SetFloat("_Slider", slider);
+        materialProperties.SetFloat("_Mixture", mixture);
         materialProperties.SetFloat("_Border", border);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
