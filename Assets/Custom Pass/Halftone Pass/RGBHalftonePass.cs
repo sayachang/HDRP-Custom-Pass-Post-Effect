@@ -2,18 +2,17 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-public class RainPass : CustomPass
+public class RGBHalftonePass : CustomPass
 {
+    public float freq = 1;
+    public float radM = 1;
+    public float radA = 0;
+    [ColorUsage(false, true)]
+    public Color toneColor = Color.white;
     [Range(0, 1)]
-    public float rainAmount = 0.5f;
-    [Range(0, 1)]
-    public float density = 0.5f;
-    [Range(0, 3)]
-    public float zoom = 1.0f;
-    [Range(0, 10)]
-    public float speed = 0.25f;
+    public float addOriginal = 0;
     [SerializeField, HideInInspector]
-    Shader rainShader;
+    Shader halftoneShader;
 
     Material fullscreenMaterial;
     MaterialPropertyBlock materialProperties;
@@ -21,8 +20,8 @@ public class RainPass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        rainShader = Shader.Find("FullScreen/RainPass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(rainShader);
+        halftoneShader = Shader.Find("FullScreen/RGBHalftonePass");
+        fullscreenMaterial = CoreUtils.CreateEngineMaterial(halftoneShader);
         materialProperties = new MaterialPropertyBlock();
 
         // List all the materials that will be replaced in the frame
@@ -36,10 +35,10 @@ public class RainPass : CustomPass
         rtBuffer = RTHandles.Alloc(
             Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Rain Buffer"
+            useDynamicScale: true, name: "RGBHalftone Buffer"
         );
     }
-    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+    void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
         var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
@@ -56,15 +55,15 @@ public class RainPass : CustomPass
     }
     protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
-        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
+        DrawMeshes(renderContext, cmd, hdCamera, cullingResult);
 
         SetCameraRenderTarget(cmd);
 
-        materialProperties.SetTexture("_BufferTex", rtBuffer);
-        materialProperties.SetFloat("_RainAmount", rainAmount);
-        materialProperties.SetFloat("_Density", density);
-        materialProperties.SetFloat("_Zoom", zoom);
-        materialProperties.SetFloat("_Speed", speed);
+        materialProperties.SetFloat("_Freq", freq);
+        materialProperties.SetFloat("_RadM", radM);
+        materialProperties.SetFloat("_RadA", radA);
+        materialProperties.SetColor("_ToneColor", toneColor);
+        materialProperties.SetFloat("_AddOrg", addOriginal);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()

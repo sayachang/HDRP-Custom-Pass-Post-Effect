@@ -2,16 +2,22 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-public class HalftonePass : CustomPass
+public class AzayakaPass : CustomPass
 {
-    public float freq = 1;
-    public float radM = 1;
-    public float radA = 0;
-    [ColorUsage(false, true)]
-    public Color toneColor = Color.white;
-    public bool addOriginal = false;
+    [Range(0.0f, 0.5f)]
+    public float azayakaL = 0.5f;
+    [Range(0.5f, 1.0f)]
+    public float azayakaR = 0.5f;
+    [Range(0, 2)]
+    public float value = 2.0f;
+    [Range(0, 2)]
+    public float vibranceAmount = 1.0f;
+    [Range(0, 1)]
+    public float mixture = 0.33f;
+    [Range(0, 1)]
+    public float border = 0.5f;
     [SerializeField, HideInInspector]
-    Shader halftoneShader;
+    Shader azayakaShader;
 
     Material fullscreenMaterial;
     MaterialPropertyBlock materialProperties;
@@ -19,8 +25,8 @@ public class HalftonePass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        halftoneShader = Shader.Find("FullScreen/HalftonePass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(halftoneShader);
+        azayakaShader = Shader.Find("FullScreen/AzayakaPass");
+        fullscreenMaterial = CoreUtils.CreateEngineMaterial(azayakaShader);
         materialProperties = new MaterialPropertyBlock();
 
         // List all the materials that will be replaced in the frame
@@ -34,10 +40,10 @@ public class HalftonePass : CustomPass
         rtBuffer = RTHandles.Alloc(
             Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Halftone Buffer"
+            useDynamicScale: true, name: "Azayaka Buffer"
         );
     }
-    void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
         var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
@@ -54,16 +60,17 @@ public class HalftonePass : CustomPass
     }
     protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
-        DrawMeshes(renderContext, cmd, hdCamera, cullingResult);
+        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
 
         SetCameraRenderTarget(cmd);
 
-        materialProperties.SetFloat("_Freq", freq);
-        materialProperties.SetFloat("_RadM", radM);
-        materialProperties.SetFloat("_RadA", radA);
-        materialProperties.SetColor("_ToneColor", toneColor);
-        if(addOriginal)
-            materialProperties.SetFloat("_AddOrg", 1);
+        materialProperties.SetTexture("_BufferTex", rtBuffer);
+        materialProperties.SetFloat("_AzayakaL", azayakaL);
+        materialProperties.SetFloat("_AzayakaR", azayakaR);
+        materialProperties.SetFloat("_Value", value);
+        materialProperties.SetFloat("_VibranceAmount", vibranceAmount);
+        materialProperties.SetFloat("_Mixture", mixture);
+        materialProperties.SetFloat("_Border", border);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()

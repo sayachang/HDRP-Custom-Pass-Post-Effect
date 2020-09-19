@@ -47,10 +47,15 @@ hieraruki- no kasutamu pasu wo sentaku si, efekuto no tyekku bokkusu wo on/ohu s
 ## どんなエフェクトがあるの？  
 Donna efekuto ga aruno?
 
-### ハーフトーン  
-Ha-fu to-n
+### あざやかフィルター  
+Azayaka Firuta-
 
-![ハーフトーン Ha-fu to-n](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Halftone.png "Halftone")
+![あざやかフィルター Azayaka Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Azayaka.png "Vibrance Filter")
+
+### RGBハーフトーン  
+RGB Ha-fu to-n
+
+![RGBハーフトーン Ha-fu to-n](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Halftone.png "RGB Halftone")
 
 ### グレースケール  
 Gure- Suke-ru
@@ -100,6 +105,9 @@ Negathibu
 ## リファレンス  
 Rifarensu
 
+RGB Halftone  
+[RGB Halftone-lookaround.fs](https://editor.isf.video/shaders/234)
+
 CRT風  
 [80年代ゲーセン筐体っぽいレトロ調の画面をUnityシェーダーで作る。](https://sayachang-bot.hateblo.jp/entry/2019/12/11/231351)
 
@@ -107,10 +115,14 @@ CRT風
 [Kuwahara Filtering - Shadertoy](https://www.shadertoy.com/view/MsXSz4#)
 
 アウトライン  
-[Custom Pass - Unity manual](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Pass.html)
+[Custom Pass - Unity Manual](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Pass.html)
 
 雨粒  
 [Heartfelt - Shadertoy](https://www.shadertoy.com/view/ltffzl)
 
 ソーベルフィルター  
 [Real Toon - Unity AssetStore](https://assetstore.unity.com/packages/vfx/shaders/realtoon-65518)
+
+misc  
+[Unityで画像にエフェクト加工するかんたんシェーダーを書く。 - さやちゃんぐbotブログ](https://sayachang-bot.hateblo.jp/entry/2019/02/09/200303)
+
