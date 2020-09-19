@@ -47,6 +47,11 @@ hieraruki- no kasutamu pasu wo sentaku si, efekuto no tyekku bokkusu wo on/ohu s
 ## どんなエフェクトがあるの？  
 Donna efekuto ga aruno?
 
+### あざやかフィルター  
+Azayaka Firuta-
+
+![あざやかフィルター Azayaka Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Azayaka.png "Vibrance Filter")
+
 ### RGBハーフトーン  
 RGB Ha-fu to-n
 
