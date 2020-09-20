@@ -159,11 +159,11 @@
         float3 viewDirection = GetWorldSpaceNormalizeViewDir(posInput.positionWS);
         float4 color = float4(0.0, 0.0, 0.0, 0.0);
 
+        float2 uv = posInput.positionNDC.xy;
         // Load the camera color buffer at the mip 0 if we're not at the before rendering injection point
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
-            color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
+            color = float4(CustomPassSampleCameraColor(uv, 0), 1);
 
-        float2 uv = posInput.positionNDC.xy;
         color.rgb = rain(uv);
         return color;
     }

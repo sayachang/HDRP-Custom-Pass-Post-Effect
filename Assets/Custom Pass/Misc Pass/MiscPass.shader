@@ -30,14 +30,14 @@
         PositionInputs posInput = GetPositionInput(varyings.positionCS.xy, _ScreenSize.zw, depth, UNITY_MATRIX_I_VP, UNITY_MATRIX_V);
         float3 viewDirection = GetWorldSpaceNormalizeViewDir(posInput.positionWS);
         float4 color = float4(0.0, 0.0, 0.0, 0.0);
+        float2 uv = varyings.positionCS.xy / min(_ScreenSize.x, _ScreenSize.y);
+        float2 nuv = posInput.positionNDC.xy;
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
-            color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
-
-        float2 uv = posInput.positionNDC.xy;
+            color = float4(CustomPassSampleCameraColor(nuv, 0), 1);
 
         // Mosaic
-        float mosaicFactor = float(_MosaicBlock);
-        float2 mosaicUV = floor(uv * mosaicFactor) / mosaicFactor;
+        float mosaicFactor = 1.0 / float(_MosaicBlock);
+        float2 mosaicUV = 0.5 * (ceil(nuv / mosaicFactor) + floor(nuv / mosaicFactor)) * mosaicFactor;
         float3 mosaicCol = CustomPassSampleCameraColor(mosaicUV, 0);
         color.rgb = mosaicCol;
 
@@ -47,7 +47,7 @@
 
         // Concentrated
         if (_Concentrated > 0) {
-            float concentratedCol = concentrated(uv);
+            float concentratedCol = concentrated(nuv);
             color.rgb *= concentratedCol;
         }
 

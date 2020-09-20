@@ -5,6 +5,7 @@ HLSLINCLUDE
 #pragma target 4.5
 #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
+#include "../HlslInclude/Include.hlsl"
 
     TEXTURE2D_X(_BufferTex);
     float _AzayakaR;
@@ -13,34 +14,6 @@ HLSLINCLUDE
     float _VibranceAmount;
     float _Mixture;
     float _Border;
-    static float3 BT601 = float3(0.298912, 0.586611, 0.114478);
-
-    float bt601Lum(float3 c) {
-        return dot(c, BT601);
-    }
-
-    float remap(float val, float inMin, float inMax, float outMin, float outMax)
-    {
-        return clamp(outMin + (val - inMin) * (outMax - outMin) / (inMax - inMin), outMin, outMax);
-    }
-
-    float3 rgb2hsv(float3 c)
-    {
-        float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-        float4 p = lerp(float4(c.bg, K.wz), float4(c.gb, K.xy), step(c.b, c.g));
-        float4 q = lerp(float4(p.xyw, c.r), float4(c.r, p.yzx), step(p.x, c.r));
-
-        float d = q.x - min(q.w, q.y);
-        float e = 1.0e-10;
-        return float3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-    }
-
-    float3 hsv2rgb(float3 c)
-    {
-        float4 K = float4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-        float3 p = abs(frac(c.xxx + K.xyz) * 6.0 - K.www);
-        return c.z * lerp(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-    }
 
     float3 azayaka(float3 col) {
         float valueMul = _Value;

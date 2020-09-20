@@ -4,13 +4,13 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 public class RGBHalftonePass : CustomPass
 {
-    public float freq = 1;
-    public float radM = 1;
-    public float radA = 0;
+    public float freq = 80;
+    public float radM = 2.5f;
+    public float radA = 0.5f;
     [ColorUsage(false, true)]
-    public Color toneColor = Color.white;
+    public Color toneColor = Color.red;
     [Range(0, 1)]
-    public float addOriginal = 0;
+    public float addOriginal = 0.75f;
     [SerializeField, HideInInspector]
     Shader halftoneShader;
 

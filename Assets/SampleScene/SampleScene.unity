@@ -165,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168218571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8101149}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8101315}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -1599,11 +1599,29 @@ MonoBehaviour:
   priority: 0
   customPasses:
   - id: 0
+  - id: 1
   injectionPoint: 2
   references:
     version: 1
     00000000:
-      type: {class: MizutamaTransitionPass, ns: , asm: Assembly-CSharp}
+      type: {class: AzayakaPass, ns: , asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        azayakaL: 0.5
+        azayakaR: 0.5
+        value: 2
+        vibranceAmount: 1
+        mixture: 0.33
+        border: 0.5
+        azayakaShader: {fileID: 4800000, guid: 15e1707a33759ca44ae17700c327069a, type: 3}
+    00000001:
+      type: {class: SobelPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
         enabled: 1
@@ -1612,11 +1630,12 @@ MonoBehaviour:
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        size: 26.94
-        mizutamaColor: {r: 0.48088288, g: 0.8301887, b: 0.80469203, a: 0}
-        mizutama: 0
-        horizontal: 1
-        mizutamaTransitionShader: {fileID: 4800000, guid: 60f781398923f9945a87ae85de58f91a, type: 3}
+        thickness: 1
+        luminous: 0
+        luminousPower: 1
+        threshold: 0.01
+        baseColor: {r: 1, g: 1, b: 1, a: 1}
+        shader: {fileID: 4800000, guid: 2a102bfdde421b4428f6b3ad970c6c04, type: 3}
 --- !u!4 &914834605
 Transform:
   m_ObjectHideFlags: 0
@@ -1659,7 +1678,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037846703}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870283}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.68703246}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -2832,7 +2851,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059789766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5101147, y: 1.196, z: 1.1760575}
+  m_LocalPosition: {x: 2.5101314, y: 1.196, z: 1.1760658}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}

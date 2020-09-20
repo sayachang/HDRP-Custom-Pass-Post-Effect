@@ -7,6 +7,8 @@ public class MizutamaTransitionPass : CustomPass
     public float size;
     public Color mizutamaColor;
     [Range(0, 1)]
+    public float gaming;
+    [Range(0, 1)]
     public float mizutama;
     [Range(0, 1)]
     public float horizontal;
@@ -61,6 +63,7 @@ public class MizutamaTransitionPass : CustomPass
         materialProperties.SetTexture("_BufferTex", rtBuffer);
         materialProperties.SetFloat("_Size", size);
         materialProperties.SetColor("_MizutamaCol", mizutamaColor);
+        materialProperties.SetFloat("_Gaming", gaming);
         materialProperties.SetFloat("_Mizutama", mizutama);
         materialProperties.SetFloat("_Horizontal", horizontal);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
