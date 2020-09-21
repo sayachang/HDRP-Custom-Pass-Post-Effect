@@ -165,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168218571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8101025}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8101325}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -1600,17 +1600,11 @@ MonoBehaviour:
   customPasses:
   - id: 0
   - id: 1
-  - id: 2
-  - id: 3
-  - id: 4
-  - id: 5
-  - id: 6
-  - id: 7
   injectionPoint: 2
   references:
     version: 1
     00000000:
-      type: {class: KuwaharaPass, ns: , asm: Assembly-CSharp}
+      type: {class: AzayakaPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
         enabled: 0
@@ -1619,113 +1613,29 @@ MonoBehaviour:
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        radius: 7
-        radExpand: 2
-        shader: {fileID: 4800000, guid: 48ac85b50b5f8d04f9a23bb04dbe4198, type: 3}
+        azayakaL: 0.5
+        azayakaR: 0.5
+        value: 2
+        vibranceAmount: 1
+        mixture: 0.33
+        border: 0.5
+        azayakaShader: {fileID: 4800000, guid: 15e1707a33759ca44ae17700c327069a, type: 3}
     00000001:
-      type: {class: CRTPass, ns: , asm: Assembly-CSharp}
+      type: {class: MizutamaTransitionPass, ns: , asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
-        enabled: 0
+        enabled: 1
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        crtShader: {fileID: 4800000, guid: 0a37ac1a3bd78f245a80706f2a105fb5, type: 3}
-    00000002:
-      type: {class: OutlinePass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 0
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
-        outlineLayer:
-          serializedVersion: 2
-          m_Bits: 512
-        outlineColor: {r: 0.33962262, g: 0.28582346, b: 0.049341388, a: 1}
-        threshold: -0.22
-        thickness: 6.5
-        outlineShader: {fileID: 4800000, guid: 25e28bfc81c746c4e8e2526a9135c4dd, type: 3}
-    00000003:
-      type: {class: SobelPass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 0
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
-        thickness: 0.84
-        luminous: 1
-        luminousPower: 55
-        threshold: 16.03
-        baseColor: {r: 0.4738875, g: 0.49198052, b: 0.745283, a: 0}
-        shader: {fileID: 4800000, guid: 2a102bfdde421b4428f6b3ad970c6c04, type: 3}
-    00000004:
-      type: {class: RainPass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 0
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
-        rainAmount: 0.5
-        zoom: 1
-        speed: 0.25
-        rainShader: {fileID: 4800000, guid: cf2a98190753b4741b5e137c50c510fe, type: 3}
-    00000005:
-      type: {class: MiscPass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 0
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
-        mosaicBlock: 512
-        nega: 0
-        concentrated: 0
-        negaIntensity: 1.49
-        shader: {fileID: 4800000, guid: 71d9c0c7d75e196428edd8b67949650d, type: 3}
-    00000006:
-      type: {class: GrayscalePass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 0
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
-        centre: {x: 0.5, y: 0.5}
-        rad: 1
-        overrideColor: 0
-        color: {r: 0.67058825, g: 0.3137255, b: 0.5117747, a: 1}
-        shader: {fileID: 4800000, guid: 78182ae493558a64ba0df313419f7db8, type: 3}
-    00000007:
-      type: {class: HalftonePass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 0
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
-        freq: 89.64
-        radM: 1.3
-        radA: 0.52
-        toneColor: {r: 0.2431292, g: 0.8207547, b: 0.7615111, a: 1}
-        addOriginal: 1
-        halftoneShader: {fileID: 4800000, guid: 092b39e318e24784ebaa9ce628cd0268, type: 3}
+        size: 0
+        mizutamaColor: {r: 0, g: 0, b: 0, a: 0}
+        gaming: 0
+        mizutama: 0
+        horizontal: 0
+        mizutamaTransitionShader: {fileID: 4800000, guid: 60f781398923f9945a87ae85de58f91a, type: 3}
 --- !u!4 &914834605
 Transform:
   m_ObjectHideFlags: 0
@@ -1768,7 +1678,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037846703}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870252}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870327}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -2941,7 +2851,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059789766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5101023, y: 1.196, z: 1.1760513}
+  m_LocalPosition: {x: 2.5101323, y: 1.196, z: 1.1760663}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}

@@ -2,17 +2,18 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-public class RGBHalftonePass : CustomPass
+public class MizutamaTransitionPass : CustomPass
 {
-    public float freq = 80;
-    public float radM = 2.5f;
-    public float radA = 0.5f;
-    [ColorUsage(false, true)]
-    public Color toneColor = Color.red;
+    public float size;
+    public Color mizutamaColor;
     [Range(0, 1)]
-    public float addOriginal = 0.75f;
+    public float gaming;
+    [Range(0, 1)]
+    public float mizutama;
+    [Range(0, 1)]
+    public float horizontal;
     [SerializeField, HideInInspector]
-    Shader halftoneShader;
+    Shader mizutamaTransitionShader;
 
     Material fullscreenMaterial;
     MaterialPropertyBlock materialProperties;
@@ -20,8 +21,8 @@ public class RGBHalftonePass : CustomPass
     RTHandle rtBuffer;
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        halftoneShader = Shader.Find("FullScreen/RGBHalftonePass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(halftoneShader);
+        mizutamaTransitionShader = Shader.Find("FullScreen/MizutamaTransitionPass");
+        fullscreenMaterial = CoreUtils.CreateEngineMaterial(mizutamaTransitionShader);
         materialProperties = new MaterialPropertyBlock();
 
         // List all the materials that will be replaced in the frame
@@ -35,10 +36,10 @@ public class RGBHalftonePass : CustomPass
         rtBuffer = RTHandles.Alloc(
             Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "RGBHalftone Buffer"
+            useDynamicScale: true, name: "Mizutama Transition Buffer"
         );
     }
-    void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
         var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
         {
@@ -55,15 +56,16 @@ public class RGBHalftonePass : CustomPass
     }
     protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
     {
-        DrawMeshes(renderContext, cmd, hdCamera, cullingResult);
+        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
 
         SetCameraRenderTarget(cmd);
 
-        materialProperties.SetFloat("_Freq", freq);
-        materialProperties.SetFloat("_RadM", radM);
-        materialProperties.SetFloat("_RadA", radA);
-        materialProperties.SetColor("_ToneColor", toneColor);
-        materialProperties.SetFloat("_AddOrg", addOriginal);
+        materialProperties.SetTexture("_BufferTex", rtBuffer);
+        materialProperties.SetFloat("_Size", size);
+        materialProperties.SetColor("_MizutamaCol", mizutamaColor);
+        materialProperties.SetFloat("_Gaming", gaming);
+        materialProperties.SetFloat("_Mizutama", mizutama);
+        materialProperties.SetFloat("_Horizontal", horizontal);
         CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
     }
     protected override void Cleanup()

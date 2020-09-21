@@ -4,12 +4,12 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 public class MiscPass : CustomPass
 {
-    [Range(1, 512)]
-    public int mosaicBlock = 512;
+    [Range(1, 2048)]
+    public int mosaicBlock = 128;
     public bool nega = false;
-    public bool concentrated = false;
     [Range(0.1f, 3)]
     public float negaIntensity = 1;
+    public bool concentrated = false;
 
     [SerializeField, HideInInspector]
     Shader shader;

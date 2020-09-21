@@ -1,34 +1,31 @@
 ﻿Shader "FullScreen/CRTPass"
 {
-    HLSLINCLUDE
-
+HLSLINCLUDE
 #pragma vertex Vert
-
 #pragma target 4.5
 #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
-
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
 
     float2 barrel(float2 uv) {
-        float s1 = .99, s2 = .125;
-        float2 centre = 2. * uv - 1.;
-        float barrel = min(1. - length(centre) * s1, 1.0) * s2;
+        float s1 = 0.99, s2 = 0.125;
+        float2 centre = 2.0 * uv - 1.0;
+        float barrel = min(1.0 - length(centre) * s1, 1.0) * s2;
         return uv - centre * barrel;
     }
 
     float2 CRT(float2 uv)
     {
-        float2 nu = uv * 2. - 1.;
-        float2 offset = abs(nu.yx) / float2(6.4, 4.8);
-        nu += nu * offset * offset;
-        return nu;
+        float2 nuv = 2.0 * uv - 1.0;
+        float2 offset = abs(nuv.yx) / float2(_ScreenSize.x, _ScreenSize.y);
+        nuv += nuv * offset * offset;
+        return nuv;
     }
 
-    float Scanline(float2 uv)
+    float scanline(float2 uv)
     {
-        float scanline = clamp(0.95 + 0.05 * cos(3.14 * (uv.y + 0.008 * floor(_Time.y * 15.) / 15.) * 240.0 * 1.0), 0.0, 1.0);
-        float grille = 0.85 + 0.15 * clamp(1.5 * cos(3.14 * uv.x * 640.0 * 1.0), 0.0, 1.0);
-        return clamp(scanline * grille * .85, .0, 1.);
+        float scanline = clamp(0.95 + 0.05 * cos(PI * (uv.y + 0.008 * floor(_Time.y * 15.0) / 15.0) * 240.0), 0.0, 1.0);
+        float grille = 0.85 + 0.15 * clamp(1.5 * cos(PI * uv.x * 640.0 * 1.0), 0.0, 1.0);
+        return clamp(scanline * grille * 0.85, 0.0, 1.0);
     }
 
     float4 FullScreenPass(Varyings varyings) : SV_Target
@@ -39,14 +36,13 @@
         float3 viewDirection = GetWorldSpaceNormalizeViewDir(posInput.positionWS);
         float4 color = float4(0.0, 0.0, 0.0, 0.0);
 
+        float2 uv = posInput.positionNDC.xy;
         // Load the camera color buffer at the mip 0 if we're not at the before rendering injection point
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
-            color = float4(CustomPassSampleCameraColor(posInput.positionNDC.xy, 0), 1);
-
-        float2 uv = posInput.positionNDC.xy;
+            color = float4(CustomPassSampleCameraColor(uv, 0), 1);
 
         // barrel distortion
-        float2 p = barrel(posInput.positionNDC.xy);
+        float2 p = barrel(uv);
         float3 col = CustomPassSampleCameraColor(p, 0);
         col = clamp(col, .0, 1.);
 
@@ -54,21 +50,21 @@
         col *= float3(1.25, 0.95, 0.7);
 
         // scanline
-        col.rgb *= Scanline(posInput.positionNDC.xy);
+        col.rgb *= scanline(uv);
 
         // crt monitor
-        float2 crt = CRT(posInput.positionNDC.xy);
+        float2 crt = CRT(uv);
         crt = abs(crt);
-        crt = pow(crt, 15.);
-        col.rgb = lerp(col.rgb, (.0).xxx, crt.x + crt.y);
+        crt = pow(crt, 15.0);
+        col.rgb = lerp(col.rgb, (0.0).xxx, crt.x + crt.y);
 
         color.rgb = col;
         return color;
     }
 
-        ENDHLSL
+ENDHLSL
 
-        SubShader
+    SubShader
     {
         Pass
         {

@@ -6,7 +6,7 @@ public class GrayscalePass : CustomPass
 {
     [Tooltip("-1.0 to +1.0")]
     public Vector2 centre = new Vector2(0, 0);
-    [Tooltip("0.0 to +1.0"), Range(0, 1)]
+    [Tooltip("0.0 to +3.0"), Range(0, 3)]
     public float rad = 1;
     public bool overrideColor = false;
     [ColorUsage(false, true)]
