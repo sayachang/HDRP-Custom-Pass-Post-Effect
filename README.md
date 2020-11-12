@@ -11,7 +11,7 @@ Efekuto wo kakunin surutameni, kutsushita ya san no Shaon chan wo shi-n ni haich
 バージョン情報  
 Ba-jon jouhou
 
-Unity 2020.1.2f1  
+Unity 2020.1.13f1  
 HDRP 8.2.0
 
 ---
@@ -91,6 +91,11 @@ Amatsubu
 So-beru Firuta-
 
 ![ソーベルフィルター So-beru Firuta-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/SobelFilter.png "Sobel Filter")
+
+### 単色  
+MonoKara-
+
+![単色 MonoKara-](https://raw.githubusercontent.com/sayachang/HDRP-Custom-Pass-Post-Effect/master/Images/Monocolor.png "Monocolor")
 
 ### モザイク  
 Mozaiku
