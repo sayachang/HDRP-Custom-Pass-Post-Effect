@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
+
 public class KuwaharaPass : CustomPass
 {
     [Range(0, 16)]
@@ -14,47 +14,33 @@ public class KuwaharaPass : CustomPass
     MaterialPropertyBlock materialProperties;
     ShaderTagId[] shaderTags;
     RTHandle rtBuffer;
+
+    private void ShaderProperty(MaterialPropertyBlock property)
+    {
+        property.SetInt("_Radius", radius);
+        property.SetInt("_RadEx", radExpand);
+    }
+
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
         shader = Shader.Find("FullScreen/KuwaharaPass");
         material = CoreUtils.CreateEngineMaterial(shader);
-        materialProperties = new MaterialPropertyBlock();
-        shaderTags = new ShaderTagId[3]
-        {
-            new ShaderTagId("Forward"),
-            new ShaderTagId("ForwardOnly"),
-            new ShaderTagId("SRPDefaultUnlit"),
-        };
 
         rtBuffer = RTHandles.Alloc(
-            Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
-            colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "RTBuffer"
+            Vector2.one,
+            TextureXR.slices,
+            dimension: TextureXR.dimension,
+            useDynamicScale: true,
+            name: "RTBuffer"
         );
     }
-    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+    protected override void Execute(CustomPassContext customPassContext)
     {
-        var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
-        {
-            rendererConfiguration = PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.Lightmaps,
-            renderQueueRange = RenderQueueRange.all,
-            sortingCriteria = SortingCriteria.BackToFront,
-            excludeObjectMotionVectors = false,
-            layerMask = 0,
-        };
-
-        CoreUtils.SetRenderTarget(cmd, rtBuffer, ClearFlag.Color);
-        HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
+        ShaderProperty(customPassContext.propertyBlock);
+        CoreUtils.SetRenderTarget(customPassContext.cmd, customPassContext.cameraColorBuffer);
+        CoreUtils.DrawFullScreen(customPassContext.cmd, material, customPassContext.propertyBlock, shaderPassId: 0);
     }
-    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
-    {
-        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
-        SetCameraRenderTarget(cmd);
 
-        materialProperties.SetInt("_Radius", radius);
-        materialProperties.SetInt("_RadEx", radExpand);
-        CoreUtils.DrawFullScreen(cmd, material, materialProperties, shaderPassId: 0);
-    }
     protected override void Cleanup()
     {
         CoreUtils.Destroy(material);

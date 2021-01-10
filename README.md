@@ -11,8 +11,11 @@ Efekuto wo kakunin surutameni, kutsushita ya san no Shaon chan wo shi-n ni haich
 バージョン情報  
 Ba-jon jouhou
 
-Unity 2020.1.13f1  
-HDRP 8.2.0
+Unity 2020.2.1f1  
+HDRP 10.2.2
+
+Unity 2020.1で動かす場合は、こちらのブランチを使ってください。  
+https://github.com/sayachang/HDRP-Custom-Pass-Post-Effect/tree/feature/unity-2020-1
 
 ---
 
@@ -115,6 +118,9 @@ Negathibu
 ## リファレンス  
 Rifarensu
 
+カスタムパス  
+[Custom Pass - Unity Manual](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@10.2/manual/Custom-Pass.html)
+
 RGB Halftone  
 [RGB Halftone-lookaround.fs](https://editor.isf.video/shaders/234)
 
@@ -123,9 +129,6 @@ CRT風
 
 桑原フィルター  
 [Kuwahara Filtering - Shadertoy](https://www.shadertoy.com/view/MsXSz4#)
-
-アウトライン  
-[Custom Pass - Unity Manual](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Pass.html)
 
 雨粒  
 [Heartfelt - Shadertoy](https://www.shadertoy.com/view/ltffzl)
