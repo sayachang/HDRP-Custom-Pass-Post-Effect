@@ -59,6 +59,8 @@ sysinfo.txt
 crashlytics-build.properties
 
 # TBD
+.vsconfig
+
 Project*
 Packages*
 UserSettings*
