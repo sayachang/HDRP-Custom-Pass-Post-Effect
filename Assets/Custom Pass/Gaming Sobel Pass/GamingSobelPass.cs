@@ -2,7 +2,7 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
-public class SobelPass : CustomPass
+public class GamingSobelPass : CustomPass
 {
     public float thickness = 1;
     public bool luminous = false;
@@ -12,7 +12,7 @@ public class SobelPass : CustomPass
     [ColorUsage(false, true)]
     public Color baseColor = Color.white;
 
-    const string SHADER_NAME = "FullScreen/SobelPass";
+    const string SHADER_NAME = "FullScreen/GamingSobelPass";
     [SerializeField, HideInInspector]
     Shader shader;
     Material material;
@@ -53,5 +53,10 @@ public class SobelPass : CustomPass
     {
         CoreUtils.Destroy(material);
         rtBuffer.Release();
+    }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
     }
 }

@@ -1,4 +1,4 @@
-﻿Shader "FullScreen/SobelPass"
+﻿Shader "FullScreen/GamingSobelPass"
 {
     HLSLINCLUDE
     #pragma vertex Vert

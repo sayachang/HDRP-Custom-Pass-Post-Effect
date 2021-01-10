@@ -46,4 +46,9 @@ public class KuwaharaPass : CustomPass
         CoreUtils.Destroy(material);
         rtBuffer.Release();
     }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
+    }
 }

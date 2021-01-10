@@ -17,12 +17,6 @@ public class MiscPass : CustomPass
     Material material;
     RTHandle rtBuffer;
 
-
-    protected override bool executeInSceneView {
-        get{ return false; }
-    }
-    
-
     private void ShaderProperty(MaterialPropertyBlock property)
     {
         property.SetInt("_MosaicBlock", mosaicBlock);
@@ -58,5 +52,10 @@ public class MiscPass : CustomPass
     {
         CoreUtils.Destroy(material);
         rtBuffer.Release();
+    }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
     }
 }

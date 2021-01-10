@@ -54,4 +54,9 @@ public class RainPass : CustomPass
         CoreUtils.Destroy(material);
         rtBuffer.Release();
     }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
+    }
 }
