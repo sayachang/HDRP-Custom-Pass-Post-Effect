@@ -1,62 +1,48 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering.HighDefinition;
+
 public class CRTPass : CustomPass
 {
+    const string SHADER_NAME = "FullScreen/CRTPass";
     [SerializeField, HideInInspector]
-    Shader crtShader;
-
-    Material fullscreenMaterial;
-    MaterialPropertyBlock materialProperties;
-    ShaderTagId[] shaderTags;
+    Shader shader;
+    Material material;
     RTHandle rtBuffer;
+
+    private void ShaderProperty(MaterialPropertyBlock property)
+    {
+    }
+
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        crtShader = Shader.Find("FullScreen/CRTPass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(crtShader);
-        materialProperties = new MaterialPropertyBlock();
-
-        // List all the materials that will be replaced in the frame
-        shaderTags = new ShaderTagId[3]
-        {
-            new ShaderTagId("Forward"),
-            new ShaderTagId("ForwardOnly"),
-            new ShaderTagId("SRPDefaultUnlit"),
-        };
+        shader = Shader.Find(SHADER_NAME);
+        material = CoreUtils.CreateEngineMaterial(shader);
 
         rtBuffer = RTHandles.Alloc(
-            Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
-            colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "CRT Buffer"
+            Vector2.one,
+            TextureXR.slices,
+            dimension: TextureXR.dimension,
+            useDynamicScale: true,
+            name: "RTBuffer"
         );
     }
-    void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+
+    protected override void Execute(CustomPassContext customPassContext)
     {
-        var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
-        {
-            // We need the lighting render configuration to support rendering lit objects
-            rendererConfiguration = PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.Lightmaps,
-            renderQueueRange = RenderQueueRange.all,
-            sortingCriteria = SortingCriteria.BackToFront,
-            excludeObjectMotionVectors = false,
-            layerMask = 0,
-        };
-
-        CoreUtils.SetRenderTarget(cmd, rtBuffer, ClearFlag.Color);
-        HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
+        ShaderProperty(customPassContext.propertyBlock);
+        CoreUtils.SetRenderTarget(customPassContext.cmd, customPassContext.cameraColorBuffer);
+        CoreUtils.DrawFullScreen(customPassContext.cmd, material, customPassContext.propertyBlock, shaderPassId: 0);
     }
-    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
-    {
-        DrawMeshes(renderContext, cmd, hdCamera, cullingResult);
 
-        SetCameraRenderTarget(cmd);
-
-        CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
-    }
     protected override void Cleanup()
     {
-        CoreUtils.Destroy(fullscreenMaterial);
+        CoreUtils.Destroy(material);
         rtBuffer.Release();
+    }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
     }
 }

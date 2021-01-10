@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering.HighDefinition;
+
 public class AzayakaPass : CustomPass
 {
     [Range(0.0f, 0.5f)]
@@ -16,66 +16,52 @@ public class AzayakaPass : CustomPass
     public float mixture = 0.33f;
     [Range(0, 1)]
     public float border = 0.5f;
-    [SerializeField, HideInInspector]
-    Shader azayakaShader;
 
-    Material fullscreenMaterial;
-    MaterialPropertyBlock materialProperties;
-    ShaderTagId[] shaderTags;
+    const string SHADER_NAME = "FullScreen/AzayakaPass";
+    [SerializeField, HideInInspector]
+    Shader shader;
+    Material material;
     RTHandle rtBuffer;
+
+    private void ShaderProperty(MaterialPropertyBlock property)
+    {
+        property.SetFloat("_AzayakaL", azayakaL);
+        property.SetFloat("_AzayakaR", azayakaR);
+        property.SetFloat("_Value", value);
+        property.SetFloat("_VibranceAmount", vibranceAmount);
+        property.SetFloat("_Mixture", mixture);
+        property.SetFloat("_Border", border);
+    }
+
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        azayakaShader = Shader.Find("FullScreen/AzayakaPass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(azayakaShader);
-        materialProperties = new MaterialPropertyBlock();
-
-        // List all the materials that will be replaced in the frame
-        shaderTags = new ShaderTagId[3]
-        {
-            new ShaderTagId("Forward"),
-            new ShaderTagId("ForwardOnly"),
-            new ShaderTagId("SRPDefaultUnlit"),
-        };
+        shader = Shader.Find(SHADER_NAME);
+        material = CoreUtils.CreateEngineMaterial(shader);
 
         rtBuffer = RTHandles.Alloc(
-            Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
-            colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Azayaka Buffer"
+            Vector2.one,
+            TextureXR.slices,
+            dimension: TextureXR.dimension,
+            useDynamicScale: true,
+            name: "RTBuffer"
         );
     }
-    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+
+    protected override void Execute(CustomPassContext customPassContext)
     {
-        var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
-        {
-            // We need the lighting render configuration to support rendering lit objects
-            rendererConfiguration = PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.Lightmaps,
-            renderQueueRange = RenderQueueRange.all,
-            sortingCriteria = SortingCriteria.BackToFront,
-            excludeObjectMotionVectors = false,
-            layerMask = 0,
-        };
-
-        CoreUtils.SetRenderTarget(cmd, rtBuffer, ClearFlag.Color);
-        HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
+        ShaderProperty(customPassContext.propertyBlock);
+        CoreUtils.SetRenderTarget(customPassContext.cmd, customPassContext.cameraColorBuffer);
+        CoreUtils.DrawFullScreen(customPassContext.cmd, material, customPassContext.propertyBlock, shaderPassId: 0);
     }
-    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
-    {
-        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
 
-        SetCameraRenderTarget(cmd);
-
-        materialProperties.SetTexture("_BufferTex", rtBuffer);
-        materialProperties.SetFloat("_AzayakaL", azayakaL);
-        materialProperties.SetFloat("_AzayakaR", azayakaR);
-        materialProperties.SetFloat("_Value", value);
-        materialProperties.SetFloat("_VibranceAmount", vibranceAmount);
-        materialProperties.SetFloat("_Mixture", mixture);
-        materialProperties.SetFloat("_Border", border);
-        CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
-    }
     protected override void Cleanup()
     {
-        CoreUtils.Destroy(fullscreenMaterial);
+        CoreUtils.Destroy(material);
         rtBuffer.Release();
+    }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
     }
 }

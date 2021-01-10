@@ -34,6 +34,9 @@
         float2 nuv = posInput.positionNDC.xy;
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
             color = float4(CustomPassSampleCameraColor(nuv, 0), 1);
+        else {
+            //color = CustomPassSampleBufferColor();
+        }
 
         // Mosaic
         float mosaicFactor = 1.0 / float(_MosaicBlock);

@@ -1,76 +1,63 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering.HighDefinition;
+
 public class MizutamaTransitionPass : CustomPass
 {
-    public float size;
-    public Color mizutamaColor;
+    public float size = 15.0f;
+    public Color mizutamaColor = Color.white;
     [Range(0, 1)]
-    public float gaming;
+    public float gaming = 0.8f;
     [Range(0, 1)]
-    public float mizutama;
+    public float outer = 0.8f;
     [Range(0, 1)]
-    public float horizontal;
-    [SerializeField, HideInInspector]
-    Shader mizutamaTransitionShader;
+    public float horizontal = 1.0f;
 
-    Material fullscreenMaterial;
-    MaterialPropertyBlock materialProperties;
-    ShaderTagId[] shaderTags;
+    const string SHADER_NAME = "FullScreen/MizutamaTransitionPass";
+    [SerializeField, HideInInspector]
+    Shader shader;
+    Material material;
     RTHandle rtBuffer;
+
+    private void ShaderProperty(MaterialPropertyBlock property)
+    {
+        property.SetTexture("_BufferTex", rtBuffer);
+        property.SetFloat("_Size", size);
+        property.SetColor("_MizutamaCol", mizutamaColor);
+        property.SetFloat("_Gaming", gaming);
+        property.SetFloat("_Mizutama", outer);
+        property.SetFloat("_Horizontal", horizontal);
+    }
+
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        mizutamaTransitionShader = Shader.Find("FullScreen/MizutamaTransitionPass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(mizutamaTransitionShader);
-        materialProperties = new MaterialPropertyBlock();
-
-        // List all the materials that will be replaced in the frame
-        shaderTags = new ShaderTagId[3]
-        {
-            new ShaderTagId("Forward"),
-            new ShaderTagId("ForwardOnly"),
-            new ShaderTagId("SRPDefaultUnlit"),
-        };
+        shader = Shader.Find(SHADER_NAME);
+        material = CoreUtils.CreateEngineMaterial(shader);
 
         rtBuffer = RTHandles.Alloc(
-            Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
-            colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Mizutama Transition Buffer"
+            Vector2.one,
+            TextureXR.slices,
+            dimension: TextureXR.dimension,
+            useDynamicScale: true,
+            name: "RTBuffer"
         );
     }
-    void DrawOutlineMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+
+    protected override void Execute(CustomPassContext customPassContext)
     {
-        var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
-        {
-            // We need the lighting render configuration to support rendering lit objects
-            rendererConfiguration = PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.Lightmaps,
-            renderQueueRange = RenderQueueRange.all,
-            sortingCriteria = SortingCriteria.BackToFront,
-            excludeObjectMotionVectors = false,
-            layerMask = 0,
-        };
-
-        CoreUtils.SetRenderTarget(cmd, rtBuffer, ClearFlag.Color);
-        HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
+        ShaderProperty(customPassContext.propertyBlock);
+        CoreUtils.SetRenderTarget(customPassContext.cmd, customPassContext.cameraColorBuffer);
+        CoreUtils.DrawFullScreen(customPassContext.cmd, material, customPassContext.propertyBlock, shaderPassId: 0);
     }
-    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
-    {
-        DrawOutlineMeshes(renderContext, cmd, hdCamera, cullingResult);
 
-        SetCameraRenderTarget(cmd);
-
-        materialProperties.SetTexture("_BufferTex", rtBuffer);
-        materialProperties.SetFloat("_Size", size);
-        materialProperties.SetColor("_MizutamaCol", mizutamaColor);
-        materialProperties.SetFloat("_Gaming", gaming);
-        materialProperties.SetFloat("_Mizutama", mizutama);
-        materialProperties.SetFloat("_Horizontal", horizontal);
-        CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
-    }
     protected override void Cleanup()
     {
-        CoreUtils.Destroy(fullscreenMaterial);
+        CoreUtils.Destroy(material);
         rtBuffer.Release();
+    }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
     }
 }

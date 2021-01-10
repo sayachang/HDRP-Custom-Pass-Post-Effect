@@ -67,7 +67,7 @@ ENDHLSL
     {
         Pass
         {
-            Name "Azayaka Pass"
+            Name "Mizutama Transition Pass"
 
             ZWrite Off
             ZTest Always

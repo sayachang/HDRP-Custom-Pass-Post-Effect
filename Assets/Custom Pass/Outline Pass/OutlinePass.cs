@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering.HighDefinition;
+
 public class OutlinePass : CustomPass
 {
     public LayerMask outlineLayer = 0;
@@ -9,63 +9,52 @@ public class OutlinePass : CustomPass
     public Color outlineColor = Color.black;
     public float threshold = 1;
     public float thickness = 1;
-    [SerializeField, HideInInspector]
-    Shader outlineShader;
 
-    Material fullscreenMaterial;
-    MaterialPropertyBlock materialProperties;
-    ShaderTagId[] shaderTags;
+    const string SHADER_NAME = "FullScreen/OutlinePass";
+    [SerializeField, HideInInspector]
+    Shader shader;
+    Material material;
     RTHandle rtBuffer;
+
+    private void ShaderProperty(MaterialPropertyBlock property)
+    {
+        property.SetColor("_OutlineColor", outlineColor);
+        property.SetTexture("_OutlineBuffer", rtBuffer);
+        property.SetFloat("_Threshold", threshold);
+        property.SetFloat("_Thickness", thickness);
+    }
+
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        outlineShader = Shader.Find("FullScreen/OutlinePass");
-        fullscreenMaterial = CoreUtils.CreateEngineMaterial(outlineShader);
-        materialProperties = new MaterialPropertyBlock();
-
-        // List all the materials that will be replaced in the frame
-        shaderTags = new ShaderTagId[3]
-        {
-            new ShaderTagId("Forward"),
-            new ShaderTagId("ForwardOnly"),
-            new ShaderTagId("SRPDefaultUnlit"),
-        };
+        shader = Shader.Find(SHADER_NAME);
+        material = CoreUtils.CreateEngineMaterial(shader);
 
         rtBuffer = RTHandles.Alloc(
-            Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
-            colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-            useDynamicScale: true, name: "Outline Buffer"
+            Vector2.one,
+            TextureXR.slices,
+            dimension: TextureXR.dimension,
+            useDynamicScale: true,
+            name: "RTBuffer"
         );
     }
-    void DrawMeshes(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
+
+    protected override void Execute(CustomPassContext customPassContext)
     {
-        var result = new RendererListDesc(shaderTags, cullingResult, hdCamera.camera)
-        {
-            // We need the lighting render configuration to support rendering lit objects
-            rendererConfiguration = PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume | PerObjectData.Lightmaps,
-            renderQueueRange = RenderQueueRange.all,
-            sortingCriteria = SortingCriteria.BackToFront,
-            excludeObjectMotionVectors = false,
-            layerMask = outlineLayer,
-        };
-
-        CoreUtils.SetRenderTarget(cmd, rtBuffer, ClearFlag.Color);
-        HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
+        CoreUtils.SetRenderTarget(customPassContext.cmd, rtBuffer);
+        CustomPassUtils.DrawRenderers(customPassContext, outlineLayer);
+        ShaderProperty(customPassContext.propertyBlock);
+        CoreUtils.SetRenderTarget(customPassContext.cmd, customPassContext.cameraColorBuffer);
+        CoreUtils.DrawFullScreen(customPassContext.cmd, material, customPassContext.propertyBlock, shaderPassId: 0);
     }
-    protected override void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult)
-    {
-        DrawMeshes(renderContext, cmd, hdCamera, cullingResult);
 
-        SetCameraRenderTarget(cmd);
-
-        materialProperties.SetColor("_OutlineColor", outlineColor);
-        materialProperties.SetTexture("_OutlineBuffer", rtBuffer);
-        materialProperties.SetFloat("_Threshold", threshold);
-        materialProperties.SetFloat("_Thickness", thickness);
-        CoreUtils.DrawFullScreen(cmd, fullscreenMaterial, materialProperties, shaderPassId: 0);
-    }
     protected override void Cleanup()
     {
-        CoreUtils.Destroy(fullscreenMaterial);
+        CoreUtils.Destroy(material);
         rtBuffer.Release();
+    }
+
+    protected override bool executeInSceneView
+    {
+        get { return false; }
     }
 }
