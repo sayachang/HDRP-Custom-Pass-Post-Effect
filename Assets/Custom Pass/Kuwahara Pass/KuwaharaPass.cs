@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class KuwaharaPass : CustomPass
 {
@@ -8,11 +8,10 @@ public class KuwaharaPass : CustomPass
     public int radius = 7;
     public int radExpand = 1;
 
+    const string SHADER_NAME = "FullScreen/KuwaharaPass";
     [SerializeField, HideInInspector]
     Shader shader;
     Material material;
-    MaterialPropertyBlock materialProperties;
-    ShaderTagId[] shaderTags;
     RTHandle rtBuffer;
 
     private void ShaderProperty(MaterialPropertyBlock property)
@@ -23,7 +22,7 @@ public class KuwaharaPass : CustomPass
 
     protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
     {
-        shader = Shader.Find("FullScreen/KuwaharaPass");
+        shader = Shader.Find(SHADER_NAME);
         material = CoreUtils.CreateEngineMaterial(shader);
 
         rtBuffer = RTHandles.Alloc(
@@ -34,6 +33,7 @@ public class KuwaharaPass : CustomPass
             name: "RTBuffer"
         );
     }
+
     protected override void Execute(CustomPassContext customPassContext)
     {
         ShaderProperty(customPassContext.propertyBlock);

@@ -72,7 +72,8 @@
         sobel = sqrt(pow(sh.r * sh.r, 2) + pow(sv.r * sv.r, 2)) * _SobelPower;
         sobel *= step(_Threshold, sobel);
         color.rgb = lerp(_BaseColor.rgb, color.rgb, sobel);
-
+        //color pencil
+        //color.rgb = 1-color.rgb;
         return color;
     }
 
