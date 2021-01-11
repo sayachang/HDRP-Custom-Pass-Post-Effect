@@ -8,7 +8,7 @@
 #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-
+    TEXTURE2D_X(_BufferTex);
     int _Radius = 7;
     int _RadEx = 1;
     float4 FullScreenPass(Varyings varyings) : SV_Target

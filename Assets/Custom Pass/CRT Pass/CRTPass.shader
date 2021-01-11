@@ -5,7 +5,7 @@ HLSLINCLUDE
 #pragma target 4.5
 #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-
+TEXTURE2D_X(_BufferTex);
     float2 barrel(float2 uv) {
         float s1 = 0.99, s2 = 0.125;
         float2 centre = 2.0 * uv - 1.0;

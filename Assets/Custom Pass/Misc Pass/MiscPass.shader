@@ -5,7 +5,7 @@
     #pragma target 4.5
     #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-
+    TEXTURE2D_X(_BufferTex);
     int _MosaicBlock;
     int _Concentrated;
     int _Nega;
@@ -30,13 +30,9 @@
         PositionInputs posInput = GetPositionInput(varyings.positionCS.xy, _ScreenSize.zw, depth, UNITY_MATRIX_I_VP, UNITY_MATRIX_V);
         float3 viewDirection = GetWorldSpaceNormalizeViewDir(posInput.positionWS);
         float4 color = float4(0.0, 0.0, 0.0, 0.0);
-        float2 uv = varyings.positionCS.xy / min(_ScreenSize.x, _ScreenSize.y);
         float2 nuv = posInput.positionNDC.xy;
         if (_CustomPassInjectionPoint != CUSTOMPASSINJECTIONPOINT_BEFORE_RENDERING)
             color = float4(CustomPassSampleCameraColor(nuv, 0), 1);
-        else {
-            //color = CustomPassSampleBufferColor();
-        }
 
         // Mosaic
         float mosaicFactor = 1.0 / float(_MosaicBlock);
@@ -45,8 +41,9 @@
         color.rgb = mosaicCol;
 
         // Nega
-        if (_Nega > 0)
+        if (_Nega > 0) {
             color.rgb = _NegaIntensity - color.rgb;
+        }
 
         // Concentrated
         if (_Concentrated > 0) {

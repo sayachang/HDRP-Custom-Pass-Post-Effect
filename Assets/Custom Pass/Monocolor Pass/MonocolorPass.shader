@@ -5,7 +5,7 @@ HLSLINCLUDE
 #pragma target 4.5
 #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-#include "../HlslInclude/Include.hlsl"
+#include "../Base/HlslInclude/Include.hlsl"
 
     TEXTURE2D_X(_BufferTex);
     float4 _Color;
@@ -27,7 +27,7 @@ HLSLINCLUDE
         float3 col = lum.xxx;
         
         color.rgb = col;
-        color.rgb *= _Color;
+        color.rgb *= _Color.rgb;
         return color;
     }
 

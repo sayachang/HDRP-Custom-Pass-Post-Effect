@@ -5,7 +5,7 @@ HLSLINCLUDE
 #pragma target 4.5
 #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-#include "../HlslInclude/Include.hlsl"
+#include "../Base/HlslInclude/Include.hlsl"
 
     TEXTURE2D_X(_BufferTex);
     float _Size;
