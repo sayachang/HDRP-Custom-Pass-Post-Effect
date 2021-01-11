@@ -4,35 +4,21 @@ using UnityEngine.Rendering.HighDefinition;
 
 namespace CustomPassPostEffect
 {
-    public class GamingSobelPass : CustomPass
+    public class CustomPassPostEffectBase : CustomPass
     {
-        public float thickness = 1;
-        public bool luminous = false;
-        [Range(1, 1024)]
-        public float luminousPower = 1;
-        public float threshold = 1;
-        [ColorUsage(false, true)]
-        public Color baseColor = Color.white;
-
-        const string SHADER_NAME = "FullScreen/GamingSobelPass";
+        protected string shaderName = "";
         [SerializeField, HideInInspector]
         Shader shader;
         Material material;
         RTHandle rtBuffer;
 
-        private void ShaderProperty(MaterialPropertyBlock property)
+        protected virtual void ShaderProperty(MaterialPropertyBlock property)
         {
-            property.SetColor("_BaseColor", baseColor);
-            property.SetFloat("_Thickness", thickness);
-            property.SetFloat("_Threshold", threshold);
-            property.SetFloat("_SobelPower", luminousPower);
-            if (luminous)
-                property.SetFloat("_Luminous", 1);
         }
 
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
-            shader = Shader.Find(SHADER_NAME);
+            shader = Shader.Find(shaderName);
             material = CoreUtils.CreateEngineMaterial(shader);
 
             rtBuffer = RTHandles.Alloc(
