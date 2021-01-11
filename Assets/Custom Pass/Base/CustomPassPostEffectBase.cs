@@ -6,11 +6,19 @@ namespace CustomPassPostEffect
 {
     public class CustomPassPostEffectBase : CustomPass
     {
-        protected string shaderName = "";
+        const string BUFFER_TEXTURE = "_BufferTex";
+        public LayerMask targetLayer = 0;
+        public bool showInSceneView = false;
+
         [SerializeField, HideInInspector]
         Shader shader;
         Material material;
         RTHandle rtBuffer;
+
+        protected virtual string ShaderName
+        {
+            get { return ""; }
+        }
 
         protected virtual void ShaderProperty(MaterialPropertyBlock property)
         {
@@ -18,7 +26,7 @@ namespace CustomPassPostEffect
 
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
-            shader = Shader.Find(shaderName);
+            shader = Shader.Find(ShaderName);
             material = CoreUtils.CreateEngineMaterial(shader);
 
             rtBuffer = RTHandles.Alloc(
@@ -32,7 +40,15 @@ namespace CustomPassPostEffect
 
         protected override void Execute(CustomPassContext customPassContext)
         {
+            if (targetLayer.value > 0)
+            {
+                CoreUtils.SetRenderTarget(customPassContext.cmd, rtBuffer);
+                CustomPassUtils.DrawRenderers(customPassContext, targetLayer);
+            }
+
+            customPassContext.propertyBlock.SetTexture(BUFFER_TEXTURE, rtBuffer);
             ShaderProperty(customPassContext.propertyBlock);
+
             CoreUtils.SetRenderTarget(customPassContext.cmd, customPassContext.cameraColorBuffer);
             CoreUtils.DrawFullScreen(customPassContext.cmd, material, customPassContext.propertyBlock, shaderPassId: 0);
         }
@@ -45,7 +61,7 @@ namespace CustomPassPostEffect
 
         protected override bool executeInSceneView
         {
-            get { return false; }
+            get { return showInSceneView; }
         }
     }
 }

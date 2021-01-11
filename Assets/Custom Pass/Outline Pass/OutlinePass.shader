@@ -8,7 +8,7 @@
     #pragma only_renderers d3d11 playstation xboxone vulkan metal switch
 
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-    TEXTURE2D_X(_OutlineBuffer);
+    TEXTURE2D_X(_BufferTex);
     float4 _OutlineColor;
     float _Threshold;
     float _Thickness;
@@ -46,7 +46,7 @@
 
         // When sampling RTHandle texture, always use _RTHandleScale.xy to scale your UVs first.
         float2 uv = posInput.positionNDC.xy * _RTHandleScale.xy;
-        float4 outline = SAMPLE_TEXTURE2D_X_LOD(_OutlineBuffer, s_linear_clamp_sampler, uv, 0);
+        float4 outline = SAMPLE_TEXTURE2D_X_LOD(_BufferTex, s_linear_clamp_sampler, uv, 0);
         outline.a = 0;
 
         if (Luminance(outline.rgb) < luminanceThreshold)
@@ -54,7 +54,7 @@
             for (int i = 0; i < MAXSAMPLES; i++)
             {
                 float2 uvN = uv + _ScreenSize.zw * _RTHandleScale.xy * samplingPositions[i] * _Thickness;
-                float4 neighbour = SAMPLE_TEXTURE2D_X_LOD(_OutlineBuffer, s_linear_clamp_sampler, uvN, 0);
+                float4 neighbour = SAMPLE_TEXTURE2D_X_LOD(_BufferTex, s_linear_clamp_sampler, uvN, 0);
 
                 if (Luminance(neighbour) > luminanceThreshold)
                 {

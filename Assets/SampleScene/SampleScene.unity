@@ -165,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168218571}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.810153}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: 1.8101721}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -1127,14 +1127,17 @@ MonoBehaviour:
   - id: 0
   - id: 1
   - id: 2
+  - id: 3
+  - id: 4
+  - id: 5
+  - id: 6
+  - id: 7
+  - id: 8
   injectionPoint: 2
-  <fadeValue>k__BackingField: 1
-  m_Colliders: []
-  m_OverlappingColliders: []
   references:
     version: 1
     00000000:
-      type: {class: AzayakaPass, ns: , asm: Assembly-CSharp}
+      type: {class: GamingSobelPass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
         enabled: 1
@@ -1142,42 +1145,19 @@ MonoBehaviour:
         targetDepthBuffer: 0
         clearFlags: 0
         passFoldout: 0
-        isExecuting: 0
-        owner: {fileID: 914834604}
         m_Version: 0
-        azayakaL: 0.5
-        azayakaR: 0.5
-        value: 2
-        vibranceAmount: 1
-        mixture: 0.33
-        border: 0.5
-        shader: {fileID: 4800000, guid: 15e1707a33759ca44ae17700c327069a, type: 3}
-        material: {fileID: 0}
-    00000001:
-      type: {class: OutlinePass, ns: , asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 1
-        targetColorBuffer: 0
-        targetDepthBuffer: 0
-        clearFlags: 0
-        passFoldout: 0
-        isExecuting: 0
-        owner: {fileID: 914834604}
-        m_Version: 0
-        outlineLayer:
-          m_Bits: 512
-        outlineColor:
-          r: 0
-          g: 0
-          b: 0
-          a: 1
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 1
+        showInSceneView: 1
+        shader: {fileID: 4800000, guid: 2a102bfdde421b4428f6b3ad970c6c04, type: 3}
+        thickness: 1
+        luminous: 1
+        luminousPower: 414.9
         threshold: 1
-        thickness: 4.5
-        shader: {fileID: 4800000, guid: 25e28bfc81c746c4e8e2526a9135c4dd, type: 3}
-        material: {fileID: 0}
-    00000002:
-      type: {class: MizutamaTransitionPass, ns: , asm: Assembly-CSharp}
+        baseColor: {r: 1, g: 1, b: 1, a: 1}
+    00000001:
+      type: {class: RGBHalftonePass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
       data:
         m_Name: Custom Pass
         enabled: 0
@@ -1185,20 +1165,145 @@ MonoBehaviour:
         targetDepthBuffer: 0
         clearFlags: 0
         passFoldout: 0
-        isExecuting: 0
-        owner: {fileID: 914834604}
         m_Version: 0
-        size: 0
-        mizutamaColor:
-          r: 0
-          g: 0
-          b: 0
-          a: 0
-        gaming: 0
-        outer: 0.8
-        horizontal: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: 092b39e318e24784ebaa9ce628cd0268, type: 3}
+        freq: 46.3
+        radM: 7.78
+        radA: 0.1
+        toneColor: {r: 0.3948183, g: 0.7924528, b: 0.3095051, a: 1}
+        addOriginal: 0.76
+    00000002:
+      type: {class: RainPass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 1
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: cf2a98190753b4741b5e137c50c510fe, type: 3}
+        rainAmount: 1
+        density: 0.93
+        zoom: 1.28
+        speed: 1.2
+    00000003:
+      type: {class: OutlinePass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 512
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: 25e28bfc81c746c4e8e2526a9135c4dd, type: 3}
+        outlineColor: {r: 0, g: 0, b: 0, a: 1}
+        threshold: 1
+        thickness: 4
+    00000004:
+      type: {class: KuwaharaPass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: 48ac85b50b5f8d04f9a23bb04dbe4198, type: 3}
+        radius: 7
+        radExpand: 1
+    00000005:
+      type: {class: MiscPass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: 71d9c0c7d75e196428edd8b67949650d, type: 3}
+        mosaicBlock: 32
+        nega: 0
+        negaIntensity: 1
+        concentrated: 1
+    00000006:
+      type: {class: MizutamaTransitionPass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        showInSceneView: 0
         shader: {fileID: 4800000, guid: 60f781398923f9945a87ae85de58f91a, type: 3}
-        material: {fileID: 0}
+        size: 15
+        mizutamaColor: {r: 1, g: 1, b: 1, a: 1}
+        gaming: 0.8
+        outer: 0.8
+        horizontal: 1
+    00000007:
+      type: {class: MonocolorPass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: 5a28866bcec692d439e65411ccc04851, type: 3}
+        color: {r: 1, g: 1, b: 1, a: 1}
+    00000008:
+      type: {class: GrayscalePass, ns: CustomPassPostEffect, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 0
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        targetLayer:
+          serializedVersion: 2
+          m_Bits: 0
+        showInSceneView: 0
+        shader: {fileID: 4800000, guid: 78182ae493558a64ba0df313419f7db8, type: 3}
+        centre: {x: 0.5, y: 0.5}
+        rad: 2
+        overrideColor: 0
+        color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!4 &914834605
 Transform:
   m_ObjectHideFlags: 0
@@ -1241,7 +1346,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037846703}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870378}
+  m_LocalPosition: {x: 0.019999983, y: 1.196, z: -0.6870426}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}
@@ -2444,7 +2549,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059789766}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5101528, y: 1.196, z: 1.1760765}
+  m_LocalPosition: {x: 2.510172, y: 1.196, z: 1.1760861}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 405591765}

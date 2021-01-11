@@ -5,7 +5,7 @@
     #pragma target 4.5
     #pragma only_renderers d3d11 playstation xboxone vulkan metal switch
     #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassCommon.hlsl"
-
+    TEXTURE2D_X(_BufferTex);
     #define SAMPLES 8
     float4 _OutlineColor;
     float _SobelPower;
